@@ -1,2 +1,2 @@
-# csci24000_fall2018_FinalProject
-Final Project - JBase Database Engine
+# CSCI-24000 Fall 2018 - Final Project
+JBase Database Engine
