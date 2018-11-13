@@ -16,9 +16,9 @@ public class JBasePermissionException extends JBaseException {
 	 * @param user The user performing this action
 	 */
 	public JBasePermissionException(JBaseAction action, User user) {
+		super(action.actionName()+": User '"+user.getUsername()+"' does not have permission to do this");
 		this.action = action;
 		this.user = user;
-		super(action.actionName()+": User '"+user.getUsername()+"' does not have permission to do this");
 	}
 
 	/**
