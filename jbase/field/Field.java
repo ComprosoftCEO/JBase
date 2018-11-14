@@ -1,6 +1,68 @@
 package jbase.field;
 
-public class Field {
+import jbase.database.Database;
+import jbase.exception.*;
+import jbase.acl.*;
+
+import java.util.ArrayList;
 
 
+public abstract class Field<T> {
+
+	private final Database db;			// Database object for this field
+	private final FieldType type;		// Type of this field
+	protected ArrayList<T> values;		// Values stored in this field
+
+	/**
+	 * Construct a new field object
+	 * @param db Field database
+	 * @param type Type of this field (key, item, foreign key, etc.)
+	 * @param depth Initial number of rows in the field
+	 */
+	public Field(Database db, FieldType type, int depth) {
+		this.db = db;
+		this.type = type;
+		this.values = new ArrayList<T>(depth);
+	}
+
+
+	/**
+	 * Get the type of this field (key, item, foreign key, etc.)
+	 * @return Field Type
+	 */
+	public FieldType getType() {
+		return this.type;
+	}
+
+	/**
+	 * Get the depth of this field (number of rows stored)
+	 * @return Depth
+	 */
+	public int getDepth() {
+		return this.values.size();
+	}
+
+	/**
+	 * Add more rows to this field
+	 * @param toAdd Number of rows to add
+	 * @throws JBaseException, JBasePermissionException
+	 */
+	public void resize(int toAdd) throws JBaseException, JBasePermissionException {
+		if (toAdd <= 0) {throw new JBaseException("toAdd <= 0");}
+		if (!db.getACL().canDo(this,FieldAction.RESIZE_FIELD)) {
+		//	throw new JBasePermissionException(FieldAction.RESIZE_FIELD, this.db.currentUser());
+		}
+	
+		//Resize the arraylist to the new capacity
+		this.values.ensureCapacity(this.getDepth() + toAdd);
+	}
+
+
+	public abstract void insert(T val);
+	public abstract void delete(T val);
+	public abstract T get(int row);
+	public abstract void put(int row, T val);
+	public abstract int find(T val);
+	public abstract int next(int startRow);
+	public abstract int pre(int startRow);
 }

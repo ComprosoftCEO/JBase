@@ -1,4 +1,6 @@
-package jbase.acl;
+package jbase.database;
+
+import jbase.JBaseAction;
 
 public enum DatabaseAction implements JBaseAction {
 	LOGIN,

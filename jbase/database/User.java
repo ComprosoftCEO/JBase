@@ -1,7 +1,8 @@
-package jbase.user;
+package jbase.database;
 
-import jbase.Database;
+import jbase.database.*;
 import jbase.acl.ACL;
+
 import java.util.Arrays;
 import java.security.MessageDigest;
 
@@ -10,10 +11,11 @@ public class User {
 	private final String username;			// Username for this User (does not change)
 	private double salt;					// Salt for the password hash
 	private byte[] password;				// Hashed password for this user
-	private final ACL acl;					// Access Control List
 
+	private final ACL acl;					// Access Control List
 	private final Database db;				// Database the User belongs to
 	private final User creator;				// Creator of this User object (null = root user)
+
 
 	private static MessageDigest hasher;	// Used for hashing the password
 

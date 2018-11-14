@@ -8,19 +8,19 @@ MANIFEST=manifest.txt
 
 # Classes to include
 CLASSES=\
-	jbase/Database.class \
+	jbase/JBaseAction.class \
+	\
+	jbase/database/Database.class \
+	jbase/database/DatabaseAction.class \
+	jbase/database/User.class \
 	\
 	jbase/field/Field.class \
-	\
-	jbase/user/User.class \
+	jbase/field/FieldAction.class \
 	\
 	jbase/exception/JBaseException.class \
 	jbase/exception/JBasePermissionException.class \
 	\
 	jbase/acl/ACL.class \
-	jbase/acl/JBaseAction.class \
-	jbase/acl/DatabaseAction.class \
-	jbase/acl/FieldAction.class \
 	jbase/acl/PermissionType.class
 
 all: $(JAR)

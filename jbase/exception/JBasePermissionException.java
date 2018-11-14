@@ -1,7 +1,7 @@
 package jbase.exception;
 
-import jbase.acl.JBaseAction;
-import jbase.user.User;
+import jbase.JBaseAction;
+import jbase.database.*;
 
 
 public class JBasePermissionException extends JBaseException {

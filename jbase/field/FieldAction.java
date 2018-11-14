@@ -1,5 +1,11 @@
-package jbase.acl;
+package jbase.field;
 
+import jbase.JBaseAction;
+
+/**
+ * Represents an action that can be done on a field
+ * @author Bryan McClain
+ */
 public enum FieldAction implements JBaseAction {
 	INSERT,
 	DELETE,

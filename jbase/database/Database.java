@@ -1,9 +1,9 @@
-package jbase;
+package jbase.database;
 
 
 import jbase.field.*;
-import jbase.user.*;
 import jbase.exception.*;
+import jbase.acl.*;
 
 import java.util.HashMap;
 import java.util.Arrays;
@@ -120,5 +120,15 @@ public final class Database {
 
 	}
 
+
+
+
+	/**
+	 * Get the Access Control List for the current Database user
+	 * @return Access Control List (ACL)
+	 */
+	public ACL getACL() {
+		return this.currentUser.getACL();
+	}
 
 }

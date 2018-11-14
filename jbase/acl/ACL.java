@@ -1,8 +1,8 @@
 package jbase.acl;
 
-import jbase.*;
+import jbase.database.*;
 import jbase.field.*;
-import jbase.user.User;
+import jbase.exception.*;
 
 import java.util.HashMap;
 

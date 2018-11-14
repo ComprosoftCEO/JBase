@@ -1,4 +1,4 @@
-package jbase.acl;
+package jbase;
 
 
 /**
