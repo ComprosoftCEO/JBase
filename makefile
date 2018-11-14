@@ -16,6 +16,7 @@ CLASSES=\
 	\
 	jbase/field/Field.class \
 	jbase/field/FieldAction.class \
+	jbase/field/FieldType.class \
 	\
 	jbase/exception/JBaseException.class \
 	jbase/exception/JBasePermissionException.class \
