@@ -19,6 +19,7 @@ CLASSES=\
 	\
 	jbase/exception/JBaseException.class \
 	jbase/exception/JBasePermissionException.class \
+	jbase/exception/JBaseBadFieldAction.class \
 	\
 	jbase/acl/ACL.class \
 	jbase/acl/PermissionType.class
