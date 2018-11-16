@@ -4,9 +4,15 @@ import jbase.database.*;
 import jbase.field.*;
 import jbase.exception.*;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class ACL {	
+
+/**
+ * Represents an Access-Control-List (ACL) for a User
+ * @author Bryan McClain
+ */
+public class ACL implements Serializable {	
 
 	private HashMap<DatabaseAction,PermissionType> database;				// Database permissions
 	private HashMap<FieldAction, PermissionType> global;					// Global field permissions
@@ -14,6 +20,8 @@ public class ACL {
 
 	private Database db;		// Parent Database
 	private User user;			// Parent user
+
+
 
 	/**
 	 * Construct a new Access Control List
@@ -29,10 +37,14 @@ public class ACL {
 
 	/**
 	 * Test if a user can perform a given database action
+	 *
 	 * @param action The action to test
 	 * @return True if the user can perform the action, false otherwise
 	 */
 	public boolean canDo(DatabaseAction action) {
+
+		//Root can do anything
+		if (this.user.isRoot()) {return true;}
 
 		//All database actions have an implicit "Deny" action
 		PermissionType type = database.get(action);
@@ -47,11 +59,16 @@ public class ACL {
 
 	/**
 	 * Test if a user can perform a given field action
+	 *
 	 * @param field The field trying to do this action
 	 * @param action The action to test
 	 * @return True if the user can perform the action, false otherwise
 	 */
 	public boolean canDo(Field field, FieldAction action) {
+
+		//Root can do anything
+		if (this.user.isRoot()) {return true;}
+
 
 		PermissionType globalType = global.get(action);
 		PermissionType fieldType = null;
@@ -83,19 +100,82 @@ public class ACL {
 
 	/**
 	 * Update a given database permission for this ACL
+	 *
 	 * @param action The database action to perform
 	 * @param type Allow, Deny, or ignore this action
+	 * @throws JBaseException, JBasePermissionException
 	 */
-	public void setPermission(DatabaseAction act, PermissionType type) {
+	public void setPermission(DatabaseAction act, PermissionType type)
+	throws JBaseException, JBasePermissionException {
 
+		//Root user cannot edit its own permissions
+		if (user.isRoot()) {
+			throw new JBaseException("Root user cannot modify its permissions");
+		}
+
+		//Make sure the current user can edit permissions
+		if (!db.getACL().canDo(DatabaseAction.EDIT_PERMISSIONS)) {
+			throw new JBasePermissionException(DatabaseAction.EDIT_PERMISSIONS,db.currentUser());
+		}
+
+		this.database.put(act,type);
 	}
 
-	public void setPermission(FieldAction act, PermissionType type) {
 
+
+	/**
+	 * Update a global field permission for this ACL
+	 *
+	 * @param action The field action to perform
+	 * @param type Allow, Deny, or ignore this action
+	 * @throws JBaseException, JBasePermissionException
+	 */	 
+	public void setPermission(FieldAction act, PermissionType type)
+	throws JBaseException, JBasePermissionException {
+
+		//Root user cannot edit its own permissions
+		if (user.isRoot()) {
+			throw new JBaseException("Root user cannot modify its permissions");
+		}
+
+		//Make sure the current user can edit permissions
+		if (!db.getACL().canDo(DatabaseAction.EDIT_PERMISSIONS)) {
+			throw new JBasePermissionException(DatabaseAction.EDIT_PERMISSIONS,db.currentUser());
+		}
+
+		this.global.put(act,type);
 	}
 
-	public void setPermission(Field field, FieldAction act, PermissionType type) {
 
+
+	/**
+	 * Update a field specific permission for this ACL
+	 *
+	 * @param field The field getting this permission
+	 * @param action The field action to perform
+	 * @param type Allow, deny, or ignore this action
+	 * @throws JBaseException, JBasePermissionException
+	 */
+	public void setPermission(Field field, FieldAction act, PermissionType type)
+	throws JBaseException, JBasePermissionException {
+
+		//Root user cannot edit its own permissions
+		if (user.isRoot()) {
+			throw new JBaseException("Root user cannot modify its permissions");
+		}
+
+		//Make sure the current user can edit permissions
+		if (!db.getACL().canDo(DatabaseAction.EDIT_PERMISSIONS)) {
+			throw new JBasePermissionException(DatabaseAction.EDIT_PERMISSIONS,db.currentUser());
+		}
+
+		//Get the field hashmap, or create it if it doesn't exist
+		HashMap<FieldAction,PermissionType> fmap = this.field.get(field);
+		if (fmap == null) {
+			fmap = new HashMap<FieldAction,PermissionType>();
+			this.field.put(field,fmap);
+		}
+	
+		fmap.put(act,type);
 	}
-
 }

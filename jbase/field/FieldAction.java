@@ -17,6 +17,11 @@ public enum FieldAction implements JBaseAction {
 	DELETE_FIELD,
 	RESIZE_FIELD;
 
+
+	/**
+	 * Get a string to represent this action
+	 * @return Action Name
+	 */
 	public String actionName() {
 		return JBaseAction.enumToString(this);
 	}

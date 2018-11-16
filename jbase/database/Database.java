@@ -111,16 +111,76 @@ public final class Database {
 
 
 
+	//================Save and Load================
 
+	/**
+	 * Release the database from memory
+	 * @throws JBaseException
+	 */
 	public void dropDatabase() throws JBaseException {
 
 	}
 
+
+	/**
+	 * Save the database to a file
+	 * @param filename The file to save to
+	 */
 	public void saveDatabase(String filename) {
 
 	}
 
 
+	public void restoreDatabase(String filename) {
+
+	}
+
+	public static void loadDatabase(String filename) {
+
+	}
+
+
+	//============Field Actions==============
+
+	//<T> Field<T> newField(FieldType type, String name, int depth, KeyField owner, KeyField point) {
+
+	//}
+
+	public Field getField(String name) {return null;}	
+
+
+	public Field[] allFields() {return null;}
+
+
+
+
+
+	//============User Actions=============
+
+	/**
+	 * Get the username for the current user logged in to the database
+	 * @return Current User (as a String)
+	 */
+	public String currentUser() {
+		return this.currentUser.getUsername();
+	}
+
+
+	/**
+	 * Get an array of all users visible to the current user
+	 * @return List of visible users
+	 */
+	public String[] allUsers() {
+		return null;
+	}
+
+	public void newUser(String username, String password) {
+
+	}
+
+	public void deleteUser(String username) {
+
+	}
 
 
 	/**
@@ -130,5 +190,4 @@ public final class Database {
 	public ACL getACL() {
 		return this.currentUser.getACL();
 	}
-
 }

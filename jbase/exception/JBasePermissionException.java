@@ -4,10 +4,14 @@ import jbase.JBaseAction;
 import jbase.database.*;
 
 
+/**
+ * Specific exception that occurs whenever a user doesn't have permission to do an action
+ * @author Bryan McClain
+ */
 public class JBasePermissionException extends JBaseException {
 
 	private final JBaseAction action;		// Action the user was trying to do
-	private final User user;				// User that performed this action
+	private final String user;				// User that performed this action
 
 
 	/**
@@ -15,8 +19,8 @@ public class JBasePermissionException extends JBaseException {
 	 * @param action The action that the user performed
 	 * @param user The user performing this action
 	 */
-	public JBasePermissionException(JBaseAction action, User user) {
-		super(action.actionName()+": User '"+user.getUsername()+"' does not have permission to do this");
+	public JBasePermissionException(JBaseAction action, String user) {
+		super(action.actionName()+": User '"+user+"' does not have permission to do this");
 		this.action = action;
 		this.user = user;
 	}
@@ -29,11 +33,12 @@ public class JBasePermissionException extends JBaseException {
 		return this.action;
 	}
 
+
 	/**
 	 * Get the user that executed the action
 	 * @return User
 	 */
-	public User getUser() {
+	public String getUser() {
 		return this.user;
 	}
 }
