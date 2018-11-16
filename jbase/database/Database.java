@@ -10,6 +10,10 @@ import java.util.Arrays;
 import java.util.Set;
 
 
+/**
+ * Represents a JBase Database
+ * @author Bryan McClain
+ */
 public final class Database {
 
 	private final String dbname;				// Name of the database
