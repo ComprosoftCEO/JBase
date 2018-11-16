@@ -1,37 +1,27 @@
 package jbase.database;
 
 import jbase.database.*;
+import jbase.exception.*;
 import jbase.acl.ACL;
 
 import java.util.Arrays;
 import java.security.MessageDigest;
 
+
+/**
+ * Represents a single user in a JBase database
+ * @author Bryan McClain
+ */
 public class User {
 
 	private final String username;			// Username for this User (does not change)
 	private double salt;					// Salt for the password hash
 	private byte[] password;				// Hashed password for this user
+	private final MessageDigest hasher;		// Used for hashing the password
 
 	private final ACL acl;					// Access Control List
 	private final Database db;				// Database the User belongs to
 	private final User creator;				// Creator of this User object (null = root user)
-
-
-	private static MessageDigest hasher;	// Used for hashing the password
-
-
-
-
-	//Static initialization for the class
-	static {
-		try {
-			hasher = MessageDigest.getInstance("SHA-256");
-        } catch (Exception e) {
-            throw new ExceptionInInitializerError(e);
-        }
-	}
-
-
 
 
 	/**
@@ -41,11 +31,21 @@ public class User {
 	 * @param username The username for this User object
 	 * @param password The password for this user
 	 * @param creator The creator of this user (NULL = this is the root user)
+	 * @throws JBaseException
 	 */
-	public User(Database db, String username, String password, User creator) {
+	public User(Database db, String username, String password, User creator)
+	throws JBaseException {
+
 		this.username = username;
-		this.salt = Math.random();
-		this.password = hashPassword(password,salt);
+
+		//Set up the password hasher
+		try {
+			this.hasher = MessageDigest.getInstance("SHA-256");
+			this.salt = Math.random();
+			this.password = hashPassword(password,this.salt,this.hasher);
+		} catch (Exception ex) {
+			throw new JBaseException("Unable to initialize a new User");
+		}
 
 		this.db = db;
 		this.creator = creator;
@@ -70,7 +70,7 @@ public class User {
 	 * @param salt The salt for the password
 	 * @return The hash for this password, salt combination
 	 */
-	private static byte[] hashPassword(String password, double salt) {
+	private static byte[] hashPassword(String password, double salt, MessageDigest hasher) {
 		String toHash = (salt+password);
 		hasher.update(toHash.getBytes());
 		return hasher.digest();
@@ -84,7 +84,7 @@ public class User {
 	 * @return True if the password is correct, false otherwise
 	 */
 	public boolean validatePassword(String password) {
-		return Arrays.equals(this.password, hashPassword(password, this.salt));
+		return Arrays.equals(this.password, hashPassword(password, this.salt, this.hasher));
 	}
 
 
@@ -101,7 +101,7 @@ public class User {
 
 		//Password is good, so update the password
 		this.salt = Math.random();
-		this.password = hashPassword(newPassword,salt);
+		this.password = hashPassword(newPassword,this.salt,this.hasher);
 		return true;
 	}
 
