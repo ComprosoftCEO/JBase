@@ -5,13 +5,14 @@ import jbase.exception.*;
 import jbase.acl.*;
 
 import java.util.ArrayList;
+import java.io.Serializable;
 
 
 /**
  * Represents a field in a JBase database
  * @author Bryan McClain
  */
-public abstract class Field<T> {
+public abstract class Field<T extends Serializable> {
 
 	private final Database db;			// Database object for this field
 	private final String name;			// Name of this field
@@ -77,11 +78,21 @@ public abstract class Field<T> {
 	}
 
 
-	public abstract void insert(T val);
-	public abstract void delete(T val);
-	public abstract T get(int row);
-	public abstract void put(int row, T val);
-	public abstract int find(T val);
-	public abstract int next(int startRow);
-	public abstract int pre(int startRow);
+	/**
+	 * Insert a new value into a key, automatically sorting the values
+	 *
+	 * @param val The value to insert
+	 * @throws JBaseException Value already exists in the database
+	 * @throws JBaseBadFieldAction The sub-field doesn't support this action
+	 * @throws JBasePermissionException 
+	 */
+	public abstract void insert(T val) throws JBaseBadFieldAction;
+
+
+	public abstract void delete(T val) throws JBaseBadFieldAction;
+	public abstract T get(int row) throws JBaseBadFieldAction;
+	public abstract void put(int row, T val) throws JBaseBadFieldAction;
+	public abstract int find(T val) throws JBaseBadFieldAction;
+	public abstract int next(int startRow) throws JBaseBadFieldAction;
+	public abstract int pre(int startRow) throws JBaseBadFieldAction;
 }

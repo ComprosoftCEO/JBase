@@ -103,7 +103,9 @@ public class ACL implements Serializable {
 	 *
 	 * @param action The database action to perform
 	 * @param type Allow, Deny, or ignore this action
-	 * @throws JBaseException, JBasePermissionException
+	 *
+	 * @throws JBaseException Root user cannot modify its permissions
+	 * @throws JBasePermissionException User doesn't have permission to modify ACL
 	 */
 	public void setPermission(DatabaseAction act, PermissionType type)
 	throws JBaseException, JBasePermissionException {
@@ -128,7 +130,9 @@ public class ACL implements Serializable {
 	 *
 	 * @param action The field action to perform
 	 * @param type Allow, Deny, or ignore this action
-	 * @throws JBaseException, JBasePermissionException
+	 *
+	 * @throws JBaseException Root user cannot modify its permissions
+	 * @throws JBasePermissionException User doesn't have permission to modify ACL
 	 */	 
 	public void setPermission(FieldAction act, PermissionType type)
 	throws JBaseException, JBasePermissionException {
@@ -154,7 +158,9 @@ public class ACL implements Serializable {
 	 * @param field The field getting this permission
 	 * @param action The field action to perform
 	 * @param type Allow, deny, or ignore this action
-	 * @throws JBaseException, JBasePermissionException
+	 *
+	 * @throws JBaseException Root user cannot modify its permissions
+	 * @throws JBasePermissionException User doesn't have permission to modify ACL
 	 */
 	public void setPermission(Field field, FieldAction act, PermissionType type)
 	throws JBaseException, JBasePermissionException {

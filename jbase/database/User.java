@@ -31,7 +31,8 @@ public class User {
 	 * @param username The username for this User object
 	 * @param password The password for this user
 	 * @param creator The creator of this user (NULL = this is the root user)
-	 * @throws JBaseException
+	 *
+	 * @throws JBaseException Problem setting up the MessageDigest (should not happen)
 	 */
 	public User(Database db, String username, String password, User creator)
 	throws JBaseException {
