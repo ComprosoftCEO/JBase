@@ -10,9 +10,8 @@ import jbase.field.*;
  *
  * @author Bryan McClain
  */
-public class JBaseBadFieldAction extends JBaseException {
+public class JBaseBadFieldAction extends JBaseFieldException {
 
-	private final Field field;			// Field throwing this error
 	private final FieldAction action;	// Action causing this error
 
 	/**
@@ -21,20 +20,11 @@ public class JBaseBadFieldAction extends JBaseException {
 	 * @param action The action being performed
 	 */
 	public JBaseBadFieldAction(Field field, FieldAction action) {
-		super("Cannot perform '"+action.actionName()+"' "+
+		super(field,"Cannot perform '"+action.toString()+"' "+
 			  "on field '"+field.getName()+"' "+
 			  "(Type: "+JBaseAction.enumToString(field.getType())+")");
 
-		this.field = field;
 		this.action = action;
-	}
-
-	/**
-	 * Get the field that threw this exception
-	 * @return Field
-	 */
-	public Field getField() {
-		return this.field;
 	}
 
 	/**

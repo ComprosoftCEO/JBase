@@ -19,8 +19,15 @@ CLASSES=\
 	jbase/field/FieldType.class \
 	\
 	jbase/exception/JBaseException.class \
-	jbase/exception/JBasePermissionException.class \
+	jbase/exception/JBaseDatabaseException.class \
+	jbase/exception/JBaseFieldException.class \
 	jbase/exception/JBaseBadFieldAction.class \
+	jbase/exception/JBaseDuplicateData.class \
+	jbase/exception/JBaseDataNotFound.class \
+	jbase/exception/JBaseBadRow.class \
+	jbase/exception/JBasePermissionException.class \
+	jbase/exception/JBaseDatabaseActionDenied.class \
+	jbase/exception/JBaseFieldActionDenied.class \
 	\
 	jbase/acl/ACL.class \
 	jbase/acl/PermissionType.class

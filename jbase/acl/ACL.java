@@ -117,7 +117,7 @@ public class ACL implements Serializable {
 
 		//Make sure the current user can edit permissions
 		if (!db.getACL().canDo(DatabaseAction.EDIT_PERMISSIONS)) {
-			throw new JBasePermissionException(DatabaseAction.EDIT_PERMISSIONS,db.currentUser());
+			throw new JBasePermissionException(db.currentUser(), DatabaseAction.EDIT_PERMISSIONS);
 		}
 
 		this.database.put(act,type);

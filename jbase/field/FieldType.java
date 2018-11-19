@@ -1,5 +1,7 @@
 package jbase.field;
 
+import jbase.JBaseAction;
+
 /**
  * Represents a type of field in the database, along with some additional metadata
  * @author Bryan McClain
@@ -90,5 +92,18 @@ public enum FieldType {
 	 */
 	public boolean canIterate() {
 		return this.canIterate;
+	}
+
+
+
+	/**
+	 * Convert this enum constant to a camel-case string.
+	 *  Underscores _ are replaced with spaces
+	 *
+	 * @return String
+	 */
+	@Override
+	public String toString() {
+		return JBaseAction.enumToString(this);
 	}
 }

@@ -19,10 +19,13 @@ public enum FieldAction implements JBaseAction {
 
 
 	/**
-	 * Get a string to represent this action
-	 * @return Action Name
+	 * Convert this enum constant to a camel-case string.
+	 *  Underscores _ are replaced with spaces
+	 *
+	 * @return String
 	 */
-	public String actionName() {
+	@Override
+	public String toString() {
 		return JBaseAction.enumToString(this);
 	}
 }

@@ -6,15 +6,6 @@ package jbase;
  */
 public interface JBaseAction {
 
-
-	/**
-	 * Get a string to describe this action that occured
-	 * @return String to describe this action
-	 */
-	public String actionName();
-
-
-
 	/**
 	 * Convert an Enum value to a camel case string.
 	 *	The underscore _ is converted to a space
