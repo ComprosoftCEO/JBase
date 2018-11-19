@@ -5,13 +5,14 @@ import jbase.field.*;
 import jbase.exception.*;
 import jbase.acl.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Set;
 
 
 /**
- * Represents a JBase Database
+ * Represents a JBase Database in memory
  * @author Bryan McClain
  */
 public final class Database {
@@ -175,7 +176,22 @@ public final class Database {
 	 * @return List of visible users
 	 */
 	public String[] allUsers() {
-		return null;
+
+		ArrayList<String> usrs = new ArrayList<String>();
+		if (getACL().canDo(DatabaseAction.VIEW_USERS)) {
+
+			//I can view all users			
+			for (User u : users.values()) {
+				usrs.add(u.getUsername());
+			}
+
+		} else {
+			//I can only view users that I created
+			for (User u : users.values()) {
+				if (u.getCreator() == this.currentUser) {usrs.add(u.getUsername());}
+			}
+		}
+		return (String[]) usrs.toArray();
 	}
 
 	public void newUser(String username, String password) {
@@ -188,7 +204,7 @@ public final class Database {
 	 */
 	public void deleteUser(String username) {
 		if (!getACL().canDo(DatabaseAction.DELETE_USER)) {
-			throw new JBaseDatabaseActionDenied(currentUser(),DatabaseAction.DELETE_USER);
+			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.DELETE_USER);
 		}
 
 
