@@ -27,6 +27,7 @@ CLASSES=\
 	jbase/exception/JBaseBadRow.class \
 	jbase/exception/JBasePermissionException.class \
 	jbase/exception/JBaseDatabaseActionDenied.class \
+	jbase/exception/JBaseACLEditDenied.class \
 	jbase/exception/JBaseFieldActionDenied.class \
 	\
 	jbase/acl/ACL.class \

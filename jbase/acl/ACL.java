@@ -103,21 +103,19 @@ public class ACL implements Serializable {
 	 *
 	 * @param action The database action to perform
 	 * @param type Allow, Deny, or ignore this action
-	 *
-	 * @throws JBaseException Root user cannot modify its permissions
-	 * @throws JBasePermissionException User doesn't have permission to modify ACL
+	 * @throws JBaseACLEditDenied User doesn't have permission to modify ACL
 	 */
 	public void setPermission(DatabaseAction act, PermissionType type)
-	throws JBaseException, JBasePermissionException {
+	throws JBaseACLEditDenied {
 
 		//Root user cannot edit its own permissions
 		if (user.isRoot()) {
-			throw new JBaseException("Root user cannot modify its permissions");
+			throw new JBaseACLEditDenied(db.currentUser(),"Root user cannot modify its permissions");
 		}
 
 		//Make sure the current user can edit permissions
 		if (!db.getACL().canDo(DatabaseAction.EDIT_PERMISSIONS)) {
-			throw new JBasePermissionException(db.currentUser(), DatabaseAction.EDIT_PERMISSIONS);
+			throw new JBaseACLEditDenied(db.currentUser());
 		}
 
 		this.database.put(act,type);
@@ -130,21 +128,19 @@ public class ACL implements Serializable {
 	 *
 	 * @param action The field action to perform
 	 * @param type Allow, Deny, or ignore this action
-	 *
-	 * @throws JBaseException Root user cannot modify its permissions
-	 * @throws JBasePermissionException User doesn't have permission to modify ACL
+	 * @throws JBaseACLEditDenied User doesn't have permission to modify ACL
 	 */	 
 	public void setPermission(FieldAction act, PermissionType type)
-	throws JBaseException, JBasePermissionException {
+	throws JBaseACLEditDenied {
 
 		//Root user cannot edit its own permissions
 		if (user.isRoot()) {
-			throw new JBaseException("Root user cannot modify its permissions");
+			throw new JBaseACLEditDenied(db.currentUser(),"Root user cannot modify its permissions");
 		}
 
 		//Make sure the current user can edit permissions
 		if (!db.getACL().canDo(DatabaseAction.EDIT_PERMISSIONS)) {
-			throw new JBasePermissionException(DatabaseAction.EDIT_PERMISSIONS,db.currentUser());
+			throw new JBaseACLEditDenied(db.currentUser());
 		}
 
 		this.global.put(act,type);
@@ -158,21 +154,19 @@ public class ACL implements Serializable {
 	 * @param field The field getting this permission
 	 * @param action The field action to perform
 	 * @param type Allow, deny, or ignore this action
-	 *
-	 * @throws JBaseException Root user cannot modify its permissions
-	 * @throws JBasePermissionException User doesn't have permission to modify ACL
+	 * @throws JBaseACLEditDenied User doesn't have permission to modify ACL
 	 */
 	public void setPermission(Field field, FieldAction act, PermissionType type)
-	throws JBaseException, JBasePermissionException {
+	throws JBaseACLEditDenied {
 
 		//Root user cannot edit its own permissions
 		if (user.isRoot()) {
-			throw new JBaseException("Root user cannot modify its permissions");
+			throw new JBaseACLEditDenied(db.currentUser(),"Root user cannot modify its permissions");
 		}
 
 		//Make sure the current user can edit permissions
 		if (!db.getACL().canDo(DatabaseAction.EDIT_PERMISSIONS)) {
-			throw new JBasePermissionException(DatabaseAction.EDIT_PERMISSIONS,db.currentUser());
+			throw new JBaseACLEditDenied(db.currentUser());
 		}
 
 		//Get the field hashmap, or create it if it doesn't exist
