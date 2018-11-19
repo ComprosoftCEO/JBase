@@ -20,6 +20,8 @@ CLASSES=\
 	\
 	jbase/exception/JBaseException.class \
 	jbase/exception/JBaseDatabaseException.class \
+	jbase/exception/JBaseDuplicateUser.class \
+	jbase/exception/JBaseUserNotFound.class \
 	jbase/exception/JBaseFieldException.class \
 	jbase/exception/JBaseBadFieldAction.class \
 	jbase/exception/JBaseDuplicateData.class \

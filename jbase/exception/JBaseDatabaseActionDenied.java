@@ -24,6 +24,20 @@ public class JBaseDatabaseActionDenied extends JBasePermissionException {
 		this.db = db;
 	}
 
+
+	/**
+	 * Construct a new Database Action Denied exception (with a custom message)
+	 *
+	 * @param user The user trying to perform this action
+	 * @param db The database this action is being performed on
+	 * @param action The action being executed
+	 * @param message Custom message to display
+	 */
+	public JBaseDatabaseActionDenied(String user, Database db, DatabaseAction action, String message) {
+		super(user,action,message);
+		this.db = db;
+	}
+
 	/**
 	 * Get the database object that caused this exception
 	 * @return Database

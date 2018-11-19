@@ -2,7 +2,12 @@ package jbase.exception;
 
 import jbase.database.Database;
 
-public class JBaseCannotDeleteUser extends JBaseDatabaseException {
+/**
+ *
+ *
+ *
+ */
+public class JBaseUserCannotDeleteItself extends JBaseDatabaseException {
 
 	private final String user;
 
@@ -13,7 +18,7 @@ public class JBaseCannotDeleteUser extends JBaseDatabaseException {
 	 * @param db The database the user belongs to
 	 * @param user The user trying to be deleted
 	 */
-	public JBaseCannotDeleteUser(Database db, String user) {
+	public JBaseUserCannotDeleteItself(Database db, String user) {
 		super(db,"Cannot delete user '"+user+"'");
 		this.user = user;
 	}

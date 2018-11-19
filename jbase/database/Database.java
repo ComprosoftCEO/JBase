@@ -179,7 +179,6 @@ public final class Database {
 
 		ArrayList<String> usrs = new ArrayList<String>();
 		if (getACL().canDo(DatabaseAction.VIEW_USERS)) {
-
 			//I can view all users			
 			for (User u : users.values()) {
 				usrs.add(u.getUsername());
@@ -194,12 +193,35 @@ public final class Database {
 		return (String[]) usrs.toArray();
 	}
 
-	public void newUser(String username, String password) {
-
-	}
 
 	/**
-	 * Delete a user from the database
+	 * Create a new user in the database
+	 *
+	 * @param username The username for this new user
+	 * @param password The password for this new user
+	 * @throws JBaseDatabaseActionDenied Current user doesn't have permission to perform this action
+	 * @throws JBaseDuplicateUser User already exists in the database
+	 */
+	public void newUser(String username, String password)
+	throws JBaseDatabaseActionDenied, JBaseDuplicateUser {
+		if (!getACL().canDo(DatabaseAction.ADD_USER)) {
+			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.ADD_USER);
+		}
+
+		//Make sure the user doesn't already exists
+		if (this.users.containsValue(username)) {
+			throw new JBaseDuplicateUser(this,username);
+		}
+
+		this.users.put(username,new User(this,username,password,this.currentUser));
+	}
+
+
+	/**
+	 * Delete a user from the database.
+	 * This merely prevents the user from being able to log in again (as it no longer exists).
+	 * However, it won't interrupt a current connection to the database.
+	 *
 	 * @param username The user to delete
 	 */
 	public void deleteUser(String username) {
@@ -207,8 +229,28 @@ public final class Database {
 			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.DELETE_USER);
 		}
 
+		User user = this.users.get(username);
+		
+		//Make sure user actually exists
+		if (user == null) {
+			throw new JBaseUserNotFound(this,username);
+		}
 
+		//Make sure I can see the user (If I don't have "View Users" enabled)
+		if (!getACL().canDo(DatabaseAction.VIEW_USERS)) {
+			if (!(user.getCreator() == this.currentUser)) {
+				throw new JBaseUserNotFound(this,username);	
+			}
+		}
+
+		//Cannot delete root user
+		if (user.isRoot()) {
+			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.DELETE_USER,"Cannot delete root user!");
+		}
+
+		this.users.remove(username);
 	}
+
 
 
 	/**

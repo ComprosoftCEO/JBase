@@ -18,7 +18,7 @@ public class JBaseACLEditDenied extends JBasePermissionException {
 	}
 
 	/**
-	 * Construct a enw ACL Edit Denied exception
+	 * Construct a new ACL Edit Denied exception
 	 * @param user The user causing this exception
 	 * @param message Custom message to display
 	 */
