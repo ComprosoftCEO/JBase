@@ -182,7 +182,15 @@ public final class Database {
 
 	}
 
+	/**
+	 * Delete a user from the database
+	 * @param username The user to delete
+	 */
 	public void deleteUser(String username) {
+		if (!getACL().canDo(DatabaseAction.DELETE_USER)) {
+			throw new JBaseDatabaseActionDenied(currentUser(),DatabaseAction.DELETE_USER);
+		}
+
 
 	}
 
