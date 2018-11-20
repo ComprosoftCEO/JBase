@@ -12,11 +12,11 @@ import java.io.Serializable;
  * Represents a field in a JBase database
  * @author Bryan McClain
  */
-public abstract class Field<T extends Serializable> {
+public abstract class Field<T extends Serializable> implements Serializable {
 
-	private final Database db;			// Database object for this field
 	private final String name;			// Name of this field
 	private final FieldType type;		// Type of this field
+	protected final Database db;		// Database object for this field
 	protected ArrayList<T> values;		// Values stored in this field
 
 
@@ -62,6 +62,15 @@ public abstract class Field<T extends Serializable> {
 		return this.values.size();
 	}
 
+
+	/**
+	 * Get the database object associated with this field
+	 * @return Database
+	 */
+	public final Database getDatabase() {
+		return this.db;
+	}
+
 	/**
 	 * Add more rows to this field
 	 * @param toAdd Number of rows to add
@@ -82,17 +91,86 @@ public abstract class Field<T extends Serializable> {
 	 * Insert a new value into a key, automatically sorting the values
 	 *
 	 * @param val The value to insert
-	 * @throws JBaseException Value already exists in the database
-	 * @throws JBaseBadFieldAction The sub-field doesn't support this action
-	 * @throws JBasePermissionException 
+	 * @throws JBaseBadFieldAction The field doesn't support this action
+	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
+	 * @throws JBaseDuplicateData Cannot insert duplicate data into a the field
 	 */
-	public abstract void insert(T val) throws JBaseBadFieldAction;
+	public abstract void insert(T val)
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseDuplicateData;
 
 
-	public abstract void delete(T val) throws JBaseBadFieldAction;
-	public abstract T get(int row) throws JBaseBadFieldAction;
-	public abstract void put(int row, T val) throws JBaseBadFieldAction;
-	public abstract int find(T val) throws JBaseBadFieldAction;
-	public abstract int next(int startRow) throws JBaseBadFieldAction;
-	public abstract int pre(int startRow) throws JBaseBadFieldAction;
+	/**
+	 * Delete a value from the key, automatically sorting the values
+	 *
+	 * @param val The value to delete
+	 * @throws JBaseBadFieldAction The field doesn't support this action
+	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
+	 * @throws JBaseDataNotFound Data doesn't exist in the field
+	 */
+	public abstract void delete(T val)
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseDataNotFound;
+
+
+	/**
+	 * Get a value stored at a given row in the field
+	 * @param row The row to retrieve
+	 * @return The value stored at the row (can be null)
+	 *
+	 * @throws JBaseBadFieldAction The field doesn't support this action
+	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
+	 * @throws JBaseBadRow Invalid row given to retrieve
+	 */
+	public abstract T get(int row)
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadRow;
+
+
+	/**
+	 * Store a value stored at a given row in the field
+	 * @param row The row to store
+	 * @param val The value stored at the row
+	 *
+	 * @throws JBaseBadFieldAction The field doesn't support this action
+	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
+	 * @throws JBaseBadRow Invalid row given for storage
+	 */
+	public abstract void put(int row, T val)
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadRow;
+
+
+	/**
+	 * Find a value stored in a field
+	 * @param val The value to find
+	 * @return Row where the value is stored
+	 *
+	 * @throws JBaseBadFieldAction The field doesn't support this action
+	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
+	 * @throws JBaseDataNotFound Data doesn't exist in the field
+	 */
+	public abstract int find(T val)
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseDataNotFound;
+
+	/**
+	 * Iterate over a sorted field, and go to the next value
+	 * @param startRow The row to start at (or a negative number to start at the root)
+	 * @return The next row
+	 *
+	 * @throws JBaseBadFieldAction The field doesn't support this action
+	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
+	 * @throws JBaseBadRow Row given that is greater than or equal to the depth
+	 */
+	public abstract int next(int startRow)
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadRow;
+
+
+	/**
+	 * Iterate over a sorted field, and go to the previous value
+	 * @param startRow The row to start at (or a negative number to start at the root)
+	 * @return The previous row
+	 *
+	 * @throws JBaseBadFieldAction The field doesn't support this action
+	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
+	 * @throws JBaseBadRow Row given that is greater than or equal to the depth
+	 */
+	public abstract int pre(int startRow)
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadRow;
 }

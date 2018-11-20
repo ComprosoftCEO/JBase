@@ -17,6 +17,11 @@ CLASSES=\
 	jbase/field/Field.class \
 	jbase/field/FieldAction.class \
 	jbase/field/FieldType.class \
+	jbase/field/KeyField.class \
+	jbase/field/BSTNode.class \
+	\
+	jbase/acl/ACL.class \
+	jbase/acl/PermissionType.class \
 	\
 	jbase/exception/JBaseException.class \
 	jbase/exception/JBaseDatabaseException.class \
@@ -30,10 +35,7 @@ CLASSES=\
 	jbase/exception/JBasePermissionException.class \
 	jbase/exception/JBaseDatabaseActionDenied.class \
 	jbase/exception/JBaseACLEditDenied.class \
-	jbase/exception/JBaseFieldActionDenied.class \
-	\
-	jbase/acl/ACL.class \
-	jbase/acl/PermissionType.class
+	jbase/exception/JBaseFieldActionDenied.class
 
 all: $(JAR)
 
