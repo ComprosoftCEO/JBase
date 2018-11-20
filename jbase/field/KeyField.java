@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public final class KeyField<T extends Comparable<T> & Serializable> extends Field<T> {
 
 	private BSTNode<T,Integer> root;				// Stores the BTree structure
-	private ArrayList<BSTNode<T,Integer>> tree;		// Each BSTNode stores index to itself in the list
+	private ArrayList<BSTNode<T,Integer>> values;	// Each BSTNode stores index to itself in the list
 	private BSTNode<T,Integer> nextSpot;			// Where to insert the next item (or null if not in use)
 
 
@@ -26,19 +26,51 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	 * @param depth Initial number of rows in the field
 	 */
 	public KeyField(Database db, String name, int depth) {
-		super(db,name,FieldType.KEY,depth);
+		super(db,name,FieldType.KEY);
 
 		this.root = null;
-		this.tree = new ArrayList<BSTNode<T,Integer>>();
+		this.values = new ArrayList<BSTNode<T,Integer>>(depth);
+
 
 		//Initialize the nodes in the tree
 		//  When not in use, trees serve as a linked list
-		this.nextSpot = new BSTNode(null,tree.size()-1);
-		tree.add(tree.size()-1,nextSpot);
-		for (int i = tree.size()-2; i >= 0; ++i) {
-			this.nextSpot = nextSpot.pushBack(new BSTNode(null,i));
+		this.nextSpot = new BSTNode(null,values.size()-1);
+		values.add(values.size()-1,nextSpot);
+		for (int i = values.size()-2; i >= 0; ++i) {
+			BSTNode<T,Integer> node = new BSTNode<T,Integer>(null,i);
+			this.values.add(i,node);
+			this.nextSpot = nextSpot.pushBack(node);
 		}
 	}
+
+
+
+	/**
+	 * Get the depth of this field (number of rows stored)
+	 * @return Depth
+	 */
+	public int getDepth() {
+		return this.values.size();
+	}
+
+
+	/**
+	 * Add more rows to this field
+	 * @param toAdd Number of rows to add
+	 *
+	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
+	 * @throws JBaseBadResize Invalid size passed to function
+	 */
+	public void resize(int toAdd) throws JBaseException, JBasePermissionException {
+		if (!db.getACL().canDo(this,FieldAction.RESIZE_FIELD)) {
+			throw new JBaseFieldActionDenied(this.db.currentUser(),this,FieldAction.RESIZE_FIELD);
+		}
+		if (toAdd <= 0) {throw new JBaseBadResize(this,toAdd);}
+	
+		//Resize the arraylist to the new capacity
+		this.values.ensureCapacity(this.getDepth() + toAdd);
+	}
+
 
 
 	/**
@@ -117,7 +149,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 			throw new JBaseBadRow(this,row);
 		}
 
-		return values.get(row);
+		return values.get(row).key;
 	}
 
 

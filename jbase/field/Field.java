@@ -17,7 +17,6 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	private final String name;			// Name of this field
 	private final FieldType type;		// Type of this field
 	protected final Database db;		// Database object for this field
-	protected ArrayList<T> values;		// Values stored in this field
 
 
 
@@ -27,13 +26,11 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * @param db Field database
 	 * @param name The name of this field
 	 * @param type Type of this field (key, item, foreign key, etc.)
-	 * @param depth Initial number of rows in the field
 	 */
-	public Field(Database db, String name, FieldType type, int depth) {
+	public Field(Database db, String name, FieldType type) {
 		this.db = db;
 		this.name = name;
 		this.type = type;
-		this.values = new ArrayList<T>(depth);
 	}
 
 
@@ -58,9 +55,7 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * Get the depth of this field (number of rows stored)
 	 * @return Depth
 	 */
-	public int getDepth() {
-		return this.values.size();
-	}
+	public abstract int getDepth();
 
 
 	/**
@@ -71,20 +66,16 @@ public abstract class Field<T extends Serializable> implements Serializable {
 		return this.db;
 	}
 
+
 	/**
 	 * Add more rows to this field
 	 * @param toAdd Number of rows to add
-	 * @throws JBaseException, JBasePermissionException
+	 * @throws JBaseBadFieldAction The field doesn't support the resize action
+	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
+	 * @throws JBaseBadResize Invalid size passed to function
 	 */
-	public void resize(int toAdd) throws JBaseException, JBasePermissionException {
-		if (toAdd <= 0) {throw new JBaseException("toAdd <= 0");}
-		if (!db.getACL().canDo(this,FieldAction.RESIZE_FIELD)) {
-		//	throw new JBasePermissionException(FieldAction.RESIZE_FIELD, this.db.currentUser());
-		}
-	
-		//Resize the arraylist to the new capacity
-		this.values.ensureCapacity(this.getDepth() + toAdd);
-	}
+	public abstract void resize(int toAdd)
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadResize;
 
 
 
