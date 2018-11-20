@@ -33,11 +33,11 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 
 		//Initialize the nodes in the tree
 		//  When not in use, trees serve as a linked list
-		tree.add(tree.size()-1,new BSTNode(null,tree.size()-1));
+		this.nextSpot = new BSTNode(null,tree.size()-1);
+		tree.add(tree.size()-1,nextSpot);
 		for (int i = tree.size()-2; i >= 0; ++i) {
-			tree.add(i,new BSTNode(null,i,null,tree.get(i+1),null));
+			this.nextSpot = nextSpot.pushBack(new BSTNode(null,i));
 		}
-		this.nextSpot = tree.get(0);
 	}
 
 
@@ -62,7 +62,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 
 		//Get the next value from the linked list
 		BSTNode<T,Integer> newNode = nextSpot;
-		nextSpot = nextSpot.right;
+		nextSpot = nextSpot.pop();
 
 		//Set the values inside the node
 		newNode.key = val;
@@ -77,9 +77,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 			//Do a BST Search to insert the key
 			if (!root.insert(newNode)) {
 				//Undo the update to the list
-				newNode.key = null;
-				newNode.right = nextSpot;
-				nextSpot = newNode;
+				nextSpot = nextSpot.pushBack(newNode);
 				throw new JBaseDuplicateData(this);
 			}
 		}

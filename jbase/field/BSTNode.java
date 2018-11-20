@@ -3,7 +3,9 @@ package jbase.field;
 import java.io.Serializable;
 
 /**
- * Single node in a Binary Search Tree
+ * Single node in a Binary Search Tree. Each node can either be a tree or an
+ *  entry in a linked list
+ *
  * @author Bryan McClain
  */
 public class BSTNode<K extends Comparable<K> & Serializable,
@@ -12,7 +14,7 @@ public class BSTNode<K extends Comparable<K> & Serializable,
 	//Yes, these are public on purpose
 	public BSTNode<K,V> left = null;
 	public BSTNode<K,V> right = null;
-	public BSTNode<K,V> parent = null;
+	public BSTNode<K,V> parent = null;		// Also serves as next for linked-list
 	public K key;
 	public V value;
 
@@ -43,6 +45,30 @@ public class BSTNode<K extends Comparable<K> & Serializable,
 		this.right = right;
 		this.parent = parent;
 	}
+
+
+
+	/**
+	 * Push a node onto the linked-list version of BST Nodes
+	 * @param other The other node to push
+	 * @return The new head of the list
+	 */
+	public BSTNode<K,V> pushBack(BSTNode<K,V> other) {
+		other.key = null;
+		other.parent = this;
+		return other;
+	}
+
+	/**
+	 * Pop a node off of the linked-list version of the BST Nodes.
+	 *  The current head becomes the free item on the list
+	 *
+	 * @return The new head of the list
+	 */
+	public BSTNode<K,V> pop() {
+		return this.parent;
+	}
+
 
 
 	/**
