@@ -35,7 +35,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		//  When not in use, trees serve as a linked list
 		tree.add(tree.size()-1,new BSTNode(null,tree.size()-1));
 		for (int i = tree.size()-2; i >= 0; ++i) {
-			tree.add(i,new BSTNode(null,i,null,tree.get(i+1)));
+			tree.add(i,new BSTNode(null,i,null,tree.get(i+1),null));
 		}
 		this.nextSpot = tree.get(0);
 	}

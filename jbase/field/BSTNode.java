@@ -12,6 +12,7 @@ public class BSTNode<K extends Comparable<K> & Serializable,
 	//Yes, these are public on purpose
 	public BSTNode<K,V> left = null;
 	public BSTNode<K,V> right = null;
+	public BSTNode<K,V> parent = null;
 	public K key;
 	public V value;
 
@@ -33,12 +34,14 @@ public class BSTNode<K extends Comparable<K> & Serializable,
 	 * @param value The value for this node
 	 * @param left Left node
 	 * @param right Right node
+	 * @param parent Parent node
 	 */
-	public BSTNode(K key, V value, BSTNode<K,V> left, BSTNode<K,V> right) {
+	public BSTNode(K key, V value, BSTNode<K,V> left, BSTNode<K,V> right, BSTNode<K,V> parent) {
 		this.key = key;
 		this.value = value;
 		this.left = left;
 		this.right = right;
+		this.parent = parent;
 	}
 
 
