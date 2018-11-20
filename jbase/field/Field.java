@@ -41,7 +41,7 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * Get the name of this field
 	 * @return Name
 	 */
-	public final String getName() {
+	public String getName() {
 		return this.name;
 	}
 
@@ -50,7 +50,7 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * Get the type of this field (key, item, foreign key, etc.)
 	 * @return Field Type
 	 */
-	public final FieldType getType() {
+	public FieldType getType() {
 		return this.type;
 	}
 
@@ -58,7 +58,7 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * Get the depth of this field (number of rows stored)
 	 * @return Depth
 	 */
-	public final int getDepth() {
+	public int getDepth() {
 		return this.values.size();
 	}
 
@@ -76,7 +76,7 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * @param toAdd Number of rows to add
 	 * @throws JBaseException, JBasePermissionException
 	 */
-	public final void resize(int toAdd) throws JBaseException, JBasePermissionException {
+	public void resize(int toAdd) throws JBaseException, JBasePermissionException {
 		if (toAdd <= 0) {throw new JBaseException("toAdd <= 0");}
 		if (!db.getACL().canDo(this,FieldAction.RESIZE_FIELD)) {
 		//	throw new JBasePermissionException(FieldAction.RESIZE_FIELD, this.db.currentUser());
@@ -94,9 +94,10 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * @throws JBaseBadFieldAction The field doesn't support this action
 	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
 	 * @throws JBaseDuplicateData Cannot insert duplicate data into a the field
+	 * @throws JBaseOutOfMemory No more space to insert any more values
 	 */
 	public abstract void insert(T val)
-	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseDuplicateData;
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseDuplicateData, JBaseOutOfMemory;
 
 
 	/**

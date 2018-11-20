@@ -32,6 +32,7 @@ CLASSES=\
 	jbase/exception/JBaseDuplicateData.class \
 	jbase/exception/JBaseDataNotFound.class \
 	jbase/exception/JBaseBadRow.class \
+	jbase/exception/JBaseOutOfMemory.class \
 	jbase/exception/JBasePermissionException.class \
 	jbase/exception/JBaseDatabaseActionDenied.class \
 	jbase/exception/JBaseACLEditDenied.class \
