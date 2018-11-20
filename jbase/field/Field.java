@@ -78,6 +78,22 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadResize;
 
 
+	/**
+	 * Get the key field that owns this field.
+	 *  Only used by items and foreign keys
+	 * @return Owner Key field, or null if it doesn't exist
+	 */
+	public abstract KeyField getOwner();
+
+
+
+	/**
+	 * Get the key field that this field points to.
+	 *  Only used by foreign keys.
+	 * @return Point field, or null if it doesn't exist
+	 */
+	public abstract KeyField getPoint();
+
 
 	/**
 	 * Insert a new value into a key, automatically sorting the values
