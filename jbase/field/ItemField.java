@@ -12,8 +12,8 @@ import java.util.ArrayList;
  */
 public class ItemField<T extends Serializable> extends Field<T> implements Serializable {
 
-	private final KeyField owner;
-	private ArrayList<T> values;
+	protected final KeyField owner;
+	protected ArrayList<T> values;
 
 
 	/**
