@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Represents an "Item" in our database (field owned by a key)
  * @author Bryan McClain
  */
-public class ItemField<T extends Serializable> extends Field<T> {
+public class ItemField<T extends Serializable> extends Field<T> implements ChildField {
 
 	protected final KeyField owner;
 	protected ArrayList<T> values;
@@ -28,6 +28,7 @@ public class ItemField<T extends Serializable> extends Field<T> {
 		super(db,name,FieldType.ITEM);
 		this.owner = owner;
 		this.values = new ArrayList<T>(owner.getDepth());
+		owner.addChild(this);
 	}
 
 
@@ -47,6 +48,7 @@ public class ItemField<T extends Serializable> extends Field<T> {
 		super(db,name,type);
 		this.owner = owner;
 		this.values = new ArrayList<T>(owner.getDepth());
+		owner.addChild(this);
 	}
 
 
@@ -70,6 +72,14 @@ public class ItemField<T extends Serializable> extends Field<T> {
 	}
 
 
+	/**
+	 * Resize the child field to match the depth of the parent
+	 * @param parent The parent field for this child
+	 */
+	public void resize(ParentField parent) {
+		if (this.owner != parent) {return;}
+		this.values.ensureCapacity(parent.getDepth());
+	}
 
 
 

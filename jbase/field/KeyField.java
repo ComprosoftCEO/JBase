@@ -7,20 +7,20 @@ import java.io.Serializable;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Field where each entry is unique and searchable
  * @author Bryan McClain
  */ 
-public final class KeyField<T extends Comparable<T> & Serializable> extends Field<T> {
+public final class KeyField<T extends Comparable<T> & Serializable> extends Field<T> implements ParentField {
 
 
 	//Look up data by either row or value
 	private TreeMap<Integer,T> by_row;		// Search for a value using the row
 	private TreeMap<T,Integer> by_value;	// Search for a row using the value
 	private Stack<Integer> nextRow;			// List of free rows
-	private Set<ChildField> children;		// All fields that this key field owns
+	private HashSet<ChildField> children;	// All fields that this key field owns
 	private int depth;
 
 
@@ -37,6 +37,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		this.by_row = new TreeMap<Integer,T>();
 		this.by_value = new TreeMap<T,Integer>();
 		this.nextRow = new Stack<Integer>();
+		this.children = new HashSet<ChildField>();
 		this.depth = depth;
 
 		//Initilize the list of rows
@@ -77,6 +78,11 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		for (int i = oldDepth; i < this.depth; ++i) {
 			this.nextRow.push(i);
 		}
+
+		//Resize all of my children
+		for (ChildField child : children) {
+			child.resize(this);
+		}
 	}
 
 
@@ -96,6 +102,26 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		return null;	/* Keys don't have point */
 	}
 
+
+
+
+	/**
+	 * Add a child to the children in this field
+	 * @param child The child field to add
+	 */
+	public void addChild(ChildField child) {
+		this.children.add(child);
+	}
+
+
+
+	/**
+	 * Remove a child from the children in this field
+	 * @param child The child field to remove
+	 */
+	public void deleteChild(ChildField child) {
+		this.children.remove(child);
+	}
 
 
 	/**

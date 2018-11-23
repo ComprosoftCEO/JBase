@@ -20,4 +20,10 @@ public interface ParentField {
 	 */
 	public void deleteChild(ChildField child);
 
+
+	/**
+	 * Get the depth of this field (number of rows stored)
+	 * @return Depth
+	 */
+	public int getDepth();
 }
