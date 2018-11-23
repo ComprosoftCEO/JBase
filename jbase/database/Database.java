@@ -206,6 +206,36 @@ public class Database implements Serializable {
 
 
 
+
+	/**
+	 * Construct a new Foreign Key Field in the database
+	 *
+	 * @param name The name of the foreign key field
+	 * @param owner Field that owns this foreign key field
+	 * @param point Field that this points to
+	 * @return The new item field
+	 *
+	 * @throws JBaseDatabaseActionDenied User doesn't have permission to create new fields
+	 * @throws JBaseDuplicateField This field already exists in the database
+	 */
+	public ForeignKeyField newForeignKey(String name, ParentField owner, PointableField point)
+	  throws JBaseDuplicateField {
+		if (!getACL().canDo(DatabaseAction.CREATE_FIELD)) {
+			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.CREATE_FIELD);
+		}
+
+		//Test for duplicate fields
+		if (this.fields.containsKey(name)) {
+			throw new JBaseDuplicateField(this,name);
+		}
+
+		ForeignKeyField fkey = new ForeignKeyField(this,name,owner,point);
+		this.fields.put(name,fkey);
+		return fkey;
+	}
+
+
+
 	/**
 	 * Get a field from the database
 	 *
