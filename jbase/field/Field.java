@@ -166,9 +166,10 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * @throws JBaseBadFieldAction The field doesn't support this action
 	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
 	 * @throws JBaseBadRow Row given that is greater than or equal to the depth
+	 * @throws JBaseEndOfList Reached the end of the list
 	 */
 	public abstract int next(int startRow)
-	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadRow;
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadRow, JBaseEndOfList;
 
 
 	/**
@@ -179,7 +180,8 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * @throws JBaseBadFieldAction The field doesn't support this action
 	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
 	 * @throws JBaseBadRow Row given that is greater than or equal to the depth
+	 * @throws JBaseEndOfList Reached the end of the list
 	 */
 	public abstract int pre(int startRow)
-	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadRow;
+	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadRow, JBaseEndOfList;
 }

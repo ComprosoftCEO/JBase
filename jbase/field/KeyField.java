@@ -4,7 +4,9 @@ import jbase.database.*;
 import jbase.exception.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Stack;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 /**
  * Field where each entry is unique and searchable
@@ -12,10 +14,12 @@ import java.util.ArrayList;
  */ 
 public final class KeyField<T extends Comparable<T> & Serializable> extends Field<T> {
 
-	private BSTNode<T,Integer> root;				// Stores the BTree structure
-	private ArrayList<BSTNode<T,Integer>> values;	// Each BSTNode stores index to itself in the list
-	private BSTNode<T,Integer> nextSpot;			// Where to insert the next item (or null if not in use)
 
+	//Look up data by either row or value
+	private TreeMap<Integer,T> by_row;		// Search for a value using the row
+	private TreeMap<T,Integer> by_value;	// Search for a row using the value
+	private Stack<Integer> nextRow;			// List of free rows
+	private int depth;
 
 
 	/**
@@ -28,18 +32,14 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	public KeyField(Database db, String name, int depth) {
 		super(db,name,FieldType.KEY);
 
-		this.root = null;
-		this.values = new ArrayList<BSTNode<T,Integer>>(depth);
+		this.by_row = new TreeMap<Integer,T>();
+		this.by_value = new TreeMap<T,Integer>();
+		this.nextRow = new Stack<Integer>();
+		this.depth = depth;
 
-
-		//Initialize the nodes in the tree
-		//  When not in use, trees serve as a linked list
-		this.nextSpot = new BSTNode(null,values.size()-1);
-		values.add(values.size()-1,nextSpot);
-		for (int i = values.size()-2; i >= 0; ++i) {
-			BSTNode<T,Integer> node = new BSTNode<T,Integer>(null,i);
-			this.values.add(i,node);
-			this.nextSpot = nextSpot.pushBack(node);
+		//Initilize the list of rows
+		for (int i = 0; i < this.depth; ++i) {
+			this.nextRow.push(i);
 		}
 	}
 
@@ -50,7 +50,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	 * @return Depth
 	 */
 	public int getDepth() {
-		return this.values.size();
+		return this.depth;
 	}
 
 
@@ -68,22 +68,13 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		if (toAdd <= 0) {throw new JBaseBadResize(this,toAdd);}
 	
 		//Resize the arraylist to the new capacity
-		int preDepth = this.getDepth();
-		int newDepth = preDepth + toAdd;
-		this.values.ensureCapacity(newDepth);
+		int oldDepth = this.depth;
+		this.depth += toAdd;
 
-		//Add the new values to the list
-		// Don't push to nextSpot unless it is not null
-		values.add(values.size()-1,new BSTNode(null,values.size()-1));
-		if (this.nextSpot == null) {this.nextSpot = values.get(values.size()-1);}
-		else {this.nextSpot = nextSpot.pushBack(values.get(values.size()-1));}
-
-		for (int i = newDepth-2; i >= preDepth; --i) {
-			BSTNode<T,Integer> node = new BSTNode<T,Integer>(null,i);
-			this.values.add(i,node);
-			this.nextSpot = nextSpot.pushBack(node);
+		//Add the new rows to the stack
+		for (int i = oldDepth; i < this.depth; ++i) {
+			this.nextRow.push(i);
 		}
-
 	}
 
 
@@ -114,38 +105,27 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	 * @throws JBaseOutOfMemory No more space to insert any more values
 	 */
 	public void insert(T val)
-	  throws JBaseFieldActionDenied, JBaseDuplicateData, JBaseOutOfMemory {
+	throws JBaseFieldActionDenied, JBaseDuplicateData, JBaseOutOfMemory {
 		if (!db.getACL().canDo(this,FieldAction.INSERT)) {
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.INSERT);
 		}
 
 		//Make sure I have space to store this value
-		if (nextSpot == null) {
+		if (this.nextRow.empty()) {
 			throw new JBaseOutOfMemory(this);
 		}
 
-		//Get the next value from the linked list
-		BSTNode<T,Integer> newNode = nextSpot;
-		nextSpot = nextSpot.pop();
-
-		//Set the values inside the node
-		newNode.key = val;
-		newNode.left = null;
-		newNode.right = null;
-
-		//When to set up the root
-		if (root == null) {
-			root = newNode;
-		} else {
-
-			//Do a BST Search to insert the key
-			if (!root.insert(newNode)) {
-				//Undo the update to the list
-				nextSpot = nextSpot.pushBack(newNode);
-				throw new JBaseDuplicateData(this);
-			}
+		//Make sure the value doesn't already exist
+		if (by_value.containsKey(val)) {
+			throw new JBaseDuplicateData(this);
 		}
+
+		//Add to the two lists
+		Integer row = this.nextRow.pop();
+		by_row.put(row,val);
+		by_value.put(val,row);
 	}
+
 
 	/**
 	 * Delete a value from the key field
@@ -160,14 +140,17 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.DELETE);
 		}
 
-		//Find the node to delete
-		BSTNode<T,Integer> toDelete = this.root.find(val);
-		if (toDelete == null) {
+		//Make sure the value actually exists to delete
+		if (!this.by_value.containsKey(val)) {
 			throw new JBaseDataNotFound(this);
 		}
 
+		Integer row = this.by_value.get(val);
+		this.by_value.remove(val);
+		this.by_row.remove(row);
 
-	
+		//Make the row available to use again
+		this.nextRow.push(row);
 	}
 
 
@@ -185,11 +168,11 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.GET);
 		}
 
-		if (row < 0 || row >= values.size()) {
+		if (!this.by_row.containsKey(row)) {
 			throw new JBaseBadRow(this,row);
 		}
 
-		return values.get(row).key;
+		return this.by_row.get(row);
 	}
 
 
@@ -221,14 +204,12 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.FIND);
 		}
 
-		//Search the binary tree
-		BSTNode<T,Integer> node;
-		if ((root == null) || ((node = root.find(val)) == null)) {
+		//Search for the value
+		if (!this.by_value.containsKey(val)) {
 			throw new JBaseDataNotFound(this);
 		} 
 
-		//Extract the value from the linked-list
-		return node.value;
+		return this.by_value.get(val);
 	}
 
 
@@ -239,7 +220,8 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	 * @return The next row
 	 *
 	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
-	 * @throws JBaseBadRow Row given that is greater than or equal to the depth
+	 * @throws JBaseBadRow Bad row given
+	 * @throws JBaseEndOfList Reached the end of the list
 	 */
 	public int next(int startRow)
 	  throws JBaseFieldActionDenied, JBaseBadRow {
@@ -247,7 +229,23 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.ITERATE);
 		}
 
-		return 0;
+		//When to get the start
+		if (startRow < 0) {
+			Entry<T,Integer> entry = this.by_value.firstEntry();
+			if (entry == null) {throw new JBaseEndOfList(this);}
+			return entry.getValue();
+		}
+
+		//Validate the row
+		if (!this.by_row.containsKey(startRow)) {
+			throw new JBaseBadRow(this,startRow);
+		}
+
+		//Get the next entry, testing for the end of the list
+		T value = this.by_row.get(startRow);
+		Entry<T,Integer> entry = this.by_value.higherEntry(value);
+		if (entry == null) {throw new JBaseEndOfList(this);}
+		return entry.getValue();
 	}
 
 
@@ -258,14 +256,31 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	 *
 	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
 	 * @throws JBaseBadRow Row given that is greater than or equal to the depth
+	 * @throws JBaseEndOfList Reached the end of the list
 	 */
 	public int pre(int startRow)
-	  throws JBaseFieldActionDenied, JBaseBadRow {
+	  throws JBaseFieldActionDenied, JBaseBadRow, JBaseEndOfList {
 		if (!db.getACL().canDo(this,FieldAction.ITERATE)) {
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.ITERATE);
 		}
 
-		return 0;
+		//When to get the start
+		if (startRow < 0) {
+			Entry<T,Integer> entry = this.by_value.lastEntry();
+			if (entry == null) {throw new JBaseEndOfList(this);}
+			return entry.getValue();
+		}
+
+		//Validate the row
+		if (!this.by_row.containsKey(startRow)) {
+			throw new JBaseBadRow(this,startRow);
+		}
+
+		//Get the next entry, testing for the end of the list
+		T value = this.by_row.get(startRow);
+		Entry<T,Integer> entry = this.by_value.lowerEntry(value);
+		if (entry == null) {throw new JBaseEndOfList(this);}
+		return entry.getValue();
 	}
 
 }

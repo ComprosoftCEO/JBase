@@ -19,7 +19,6 @@ CLASSES=\
 	jbase/field/FieldAction.class \
 	jbase/field/FieldType.class \
 	jbase/field/KeyField.class \
-	jbase/field/BSTNode.class \
 	jbase/field/ItemField.class \
 	jbase/field/ForeignKeyField.class \
 	\
@@ -35,6 +34,7 @@ CLASSES=\
 	jbase/exception/JBaseDuplicateData.class \
 	jbase/exception/JBaseDataNotFound.class \
 	jbase/exception/JBaseBadRow.class \
+	jbase/exception/JBaseEndOfList.class \
 	jbase/exception/JBaseBadResize.class \
 	jbase/exception/JBaseOutOfMemory.class \
 	jbase/exception/JBasePermissionException.class \
