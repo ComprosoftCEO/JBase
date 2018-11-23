@@ -149,6 +149,33 @@ public class Database implements Serializable {
 	//============Field Actions==============
 
 
+
+	/**
+	 * Construct a new Key Field in the database
+	 *
+	 * @param name The name of the field
+	 * @param depth The depth of this field (number of rows)
+	 * @return The new key field
+	 *
+	 * @throws JBaseDatabaseActionDenied User doesn't have permission to create new fields
+	 * @throws JBaseDuplicateField This field already exists in the database
+	 */
+	public <T extends Serializable & Comparable<T>> KeyField<T> newKey(String name, int depth)
+	  throws JBaseDuplicateField {
+		if (!getACL().canDo(DatabaseAction.CREATE_FIELD)) {
+			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.CREATE_FIELD);
+		}
+
+		//Test for duplicate fields
+		if (this.fields.containsKey(name)) {
+			throw new JBaseDuplicateField(this,name);
+		}
+
+		KeyField<T> key = new KeyField<T>(this,name,depth);
+		this.fields.put(name,key);
+		return key;
+	}
+
 	/**
 	 * Construct a new field in the database
 	 *
@@ -199,7 +226,6 @@ public class Database implements Serializable {
 	public Field[] allFields() {
 		return (Field[]) this.fields.values().toArray();
 	}
-
 
 
 
