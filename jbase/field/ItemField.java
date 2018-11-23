@@ -31,6 +31,24 @@ public class ItemField<T extends Serializable> extends Field<T> implements Seria
 	}
 
 
+	/**
+	 * Construct a new item field in the database.
+	 *  Depth is inherited from the owner field.
+	 *
+	 *  This constructor is protected to allow sub-classes (foreign key) to have
+	 *   item-like properties but still be a distinct field
+	 *
+	 * @param type The type of this field
+	 * @param db The database for this field
+	 * @param name The name of this field
+	 * @param owner Key that owns this field
+	 */
+	protected ItemField(FieldType type, Database db, String name, KeyField owner) {
+		super(db,name,type);
+		this.owner = owner;
+		this.values = new ArrayList<T>(owner.getDepth());
+	}
+
 
 	/**
 	 * Get the depth of this field (number of rows stored)
@@ -50,6 +68,9 @@ public class ItemField<T extends Serializable> extends Field<T> implements Seria
 	public void resize(int toAdd) throws JBaseBadFieldAction {
 		throw new JBaseBadFieldAction(this,FieldAction.RESIZE_FIELD);
 	}
+
+
+
 
 
 	/**
