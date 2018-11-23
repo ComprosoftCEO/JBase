@@ -9,6 +9,7 @@ MANIFEST=manifest.txt
 # Classes to include
 CLASSES=\
 	jbase/JBaseAction.class \
+	jbase/ui/Test.class \
 	\
 	jbase/database/Database.class \
 	jbase/database/DatabaseAction.class \

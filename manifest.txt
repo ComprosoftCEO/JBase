@@ -1,2 +1,3 @@
 Manifest-Version: 1.0
 Created-By: Bryan McClain (bryamccl@iu.edu)
+Main-Class: jbase.ui.Test
