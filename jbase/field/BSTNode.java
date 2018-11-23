@@ -84,13 +84,23 @@ public class BSTNode<K extends Comparable<K> & Serializable,
 			int cmp = currentNode.key.compareTo(newNode.key);
 			if (cmp > 0) {
 				/* Insert less than */
-				if (this.left != null) {currentNode = this.left;}
-				else {this.left = newNode; return true;}
+				if (this.left != null) {
+					currentNode = this.left;
+				} else {
+					this.left = newNode;
+					newNode.parent = this.left;
+					return true;
+				}
 			}
 			else if (cmp < 0) {
 				/* Insert greater than */
-				if (this.right != null) {currentNode = this.right;}
-				else {this.right = newNode; return true;}
+				if (this.right != null) {
+					currentNode = this.right;
+				} else {
+					this.right = newNode;
+					newNode.parent = this.right;
+					return true;
+				}
 			
 			}
 			else if (cmp == 0) {
@@ -122,10 +132,19 @@ public class BSTNode<K extends Comparable<K> & Serializable,
 
 	/**
 	 * Delete a node from the Binary Search Tree
-	 * @param toDelete The value to delete
-	 *
+	 * @param toDelete The node to delete (found using a call to find)
+	 * @return The new node to replace the existing node
 	 */
-	public boolean delete(K toDelete) {
+	public BSTNode<K,V> delete(BSTNode<K,V> toDelete) {
+
+		//Case 1: Both children are null
+		if ((toDelete.left == null) && toDelete.right == null) {
+			
+
+
+		}
+
+
 		return false;
 	}
 }

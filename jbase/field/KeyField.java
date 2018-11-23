@@ -162,7 +162,12 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 
 		//Find the node to delete
 		BSTNode<T,Integer> toDelete = this.root.find(val);
-		
+		if (toDelete == null) {
+			throw new JBaseDataNotFound(this);
+		}
+
+
+	
 	}
 
 
