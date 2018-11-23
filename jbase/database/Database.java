@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Set;
+import java.io.Serializable;
 
 
 /**
@@ -147,9 +148,35 @@ public final class Database {
 
 	//============Field Actions==============
 
-	//<T> Field<T> newField(FieldType type, String name, int depth, KeyField owner, KeyField point) {
 
-	//}
+	/**
+	 * Construct a new field in the database
+	 *
+	 *
+	 */
+	/*<T extends Serializable> Field<T> newField(FieldType type, String name, int depth, KeyField owner, KeyField point)
+	  throws JBaseDatabaseActionDenied {
+
+		if (!getACL().canDo(DatabaseAction.CREATE_FIELD)) {
+			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.CREATE_FIELD);
+		}
+
+
+		Field f = null;
+		switch(type) {
+			case KEY:
+				f = new KeyField<T>(this,name,depth);
+				break;
+
+			case ITEM:
+				f = new ItemField<T>(this,name,owner);
+				break;
+
+			case FOREIGN_KEY:
+				f = new ForeignKeyField(this,name,owner,point);
+				break;
+		}
+	}*/
 
 	public Field getField(String name) {return null;}	
 

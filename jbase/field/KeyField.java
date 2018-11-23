@@ -68,7 +68,22 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		if (toAdd <= 0) {throw new JBaseBadResize(this,toAdd);}
 	
 		//Resize the arraylist to the new capacity
-		this.values.ensureCapacity(this.getDepth() + toAdd);
+		int preDepth = this.getDepth();
+		int newDepth = preDepth + toAdd;
+		this.values.ensureCapacity(newDepth);
+
+		//Add the new values to the list
+		// Don't push to nextSpot unless it is not null
+		values.add(values.size()-1,new BSTNode(null,values.size()-1));
+		if (this.nextSpot == null) {this.nextSpot = values.get(values.size()-1);}
+		else {this.nextSpot = nextSpot.pushBack(values.get(values.size()-1));}
+
+		for (int i = newDepth-2; i >= preDepth; --i) {
+			BSTNode<T,Integer> node = new BSTNode<T,Integer>(null,i);
+			this.values.add(i,node);
+			this.nextSpot = nextSpot.pushBack(node);
+		}
+
 	}
 
 
@@ -144,6 +159,9 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		if (!db.getACL().canDo(this,FieldAction.DELETE)) {
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.DELETE);
 		}
+
+		//Find the node to delete
+		BSTNode<T,Integer> toDelete = this.root.find(val);
 		
 	}
 
