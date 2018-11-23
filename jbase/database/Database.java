@@ -16,7 +16,7 @@ import java.io.Serializable;
  * Represents a JBase Database in memory
  * @author Bryan McClain
  */
-public final class Database {
+public class Database implements Serializable {
 
 	private final String dbname;				// Name of the database
 	private HashMap<String,Field> fields;		// List of fields this database owns
@@ -178,7 +178,18 @@ public final class Database {
 		}
 	}*/
 
-	public Field getField(String name) {return null;}	
+	/**
+	 * Get a field from the database
+	 *
+	 * @param name The field to search for
+	 * @return The retrieved field
+	 * @throws JBaseFieldNotFound That field doesn't exist in the database
+	 */
+	public Field getField(String name) throws JBaseFieldNotFound {
+		Field f = fields.get(name);
+		if (f == null) {throw new JBaseFieldNotFound(this,name);}
+		return f;
+	}
 
 
 	public Field[] allFields() {return null;}

@@ -13,7 +13,6 @@ public enum FieldAction implements JBaseAction {
 	PUT,
 	FIND,
 	ITERATE,	/* Next and Pre */
-	SEE_FIELD,	/* Can call Database.getField() */
 	DELETE_FIELD,
 	RESIZE_FIELD;
 
