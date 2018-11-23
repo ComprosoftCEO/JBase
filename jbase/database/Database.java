@@ -186,13 +186,19 @@ public class Database implements Serializable {
 	 * @throws JBaseFieldNotFound That field doesn't exist in the database
 	 */
 	public Field getField(String name) throws JBaseFieldNotFound {
-		Field f = fields.get(name);
+		Field f = this.fields.get(name);
 		if (f == null) {throw new JBaseFieldNotFound(this,name);}
 		return f;
 	}
 
 
-	public Field[] allFields() {return null;}
+	/**
+	 * Get an array of all fields in the database
+	 * @return Array of all fields
+	 */
+	public Field[] allFields() {
+		return (Field[]) this.fields.values().toArray();
+	}
 
 
 
