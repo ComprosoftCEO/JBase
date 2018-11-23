@@ -5,7 +5,7 @@ package jbase.field;
  * Interface for a field that can accept children
  * @author Bryan McClain
  */
-public interface ParentField {
+public interface ParentField extends JBaseField {
 
 	/**
 	 * Add a child to the children in this field

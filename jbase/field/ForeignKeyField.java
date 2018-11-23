@@ -22,7 +22,7 @@ public class ForeignKeyField extends ItemField<Integer> {
 	 * @param owner Key that owns this field
 	 * @param point Key that this field points to
 	 */
-	public ForeignKeyField(Database db, String name, KeyField owner, KeyField point) {
+	public ForeignKeyField(Database db, String name, ParentField owner, KeyField point) {
 		super(FieldType.FOREIGN_KEY,db,name,owner);
 		this.point = point;
 	}

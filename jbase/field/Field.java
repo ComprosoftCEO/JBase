@@ -13,7 +13,7 @@ import java.lang.reflect.ParameterizedType;
  * Represents a field in a JBase database
  * @author Bryan McClain
  */
-public abstract class Field<T extends Serializable> implements Serializable {
+public abstract class Field<T extends Serializable> implements Serializable, JBaseField {
 
 	private final String name;			// Name of this field
 	private final FieldType type;		// Type of this field
@@ -31,6 +31,15 @@ public abstract class Field<T extends Serializable> implements Serializable {
 		this.db = db;
 		this.name = name;
 		this.type = type;
+	}
+
+
+	/**
+	 * Convert a JBase field interface into an actual field object
+	 * @return Field object
+	 */
+	public <T extends Serializable> Field<T> toField() {
+		return (Field<T>) this;
 	}
 
 
@@ -96,11 +105,11 @@ public abstract class Field<T extends Serializable> implements Serializable {
 
 
 	/**
-	 * Get the key field that owns this field.
+	 * Get the field that owns this field.
 	 *  Only used by items and foreign keys
 	 * @return Owner Key field, or null if it doesn't exist
 	 */
-	public abstract KeyField getOwner();
+	public abstract ParentField getOwner();
 
 
 

@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 public class ItemField<T extends Serializable> extends Field<T> implements ChildField {
 
-	protected final KeyField owner;
+	protected final ParentField owner;
 	protected ArrayList<T> values;
 
 
@@ -22,9 +22,9 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	 *
 	 * @param db The database for this field
 	 * @param name The name of this field
-	 * @param owner Key that owns this field
+	 * @param owner Parent that owns this field
 	 */
-	public ItemField(Database db, String name, KeyField owner) {
+	public ItemField(Database db, String name, ParentField owner) {
 		super(db,name,FieldType.ITEM);
 		this.owner = owner;
 		this.values = new ArrayList<T>(owner.getDepth());
@@ -44,7 +44,7 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	 * @param name The name of this field
 	 * @param owner Key that owns this field
 	 */
-	protected ItemField(FieldType type, Database db, String name, KeyField owner) {
+	protected ItemField(FieldType type, Database db, String name, ParentField owner) {
 		super(db,name,type);
 		this.owner = owner;
 		this.values = new ArrayList<T>(owner.getDepth());
@@ -88,7 +88,7 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	 *  Only used by items and foreign keys
 	 * @return Owner Key field, or null if it doesn't exist
 	 */
-	public KeyField getOwner() {
+	public ParentField getOwner() {
 		return this.owner;
 	}
 

@@ -5,7 +5,7 @@ package jbase.field;
  * Represents a field that has a parent (or owner) field
  * @author Bryan McClain
  */
-public interface ChildField {
+public interface ChildField extends JBaseField {
 
 
 	/**

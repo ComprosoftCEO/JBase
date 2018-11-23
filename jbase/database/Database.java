@@ -176,34 +176,35 @@ public class Database implements Serializable {
 		return key;
 	}
 
-	/**
-	 * Construct a new field in the database
-	 *
-	 *
-	 */
-	/*<T extends Serializable> Field<T> newField(FieldType type, String name, int depth, KeyField owner, KeyField point)
-	  throws JBaseDatabaseActionDenied {
 
+
+	/**
+	 * Construct a new Item Field in the database
+	 *
+	 * @param name The name of the item field
+	 * @param owner Field that owns this item field
+	 * @return The new item field
+	 *
+	 * @throws JBaseDatabaseActionDenied User doesn't have permission to create new fields
+	 * @throws JBaseDuplicateField This field already exists in the database
+	 */
+	public <T extends Serializable> ItemField<T> newItem(String name, ParentField owner)
+	  throws JBaseDuplicateField {
 		if (!getACL().canDo(DatabaseAction.CREATE_FIELD)) {
 			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.CREATE_FIELD);
 		}
 
-
-		Field f = null;
-		switch(type) {
-			case KEY:
-				f = new KeyField<T>(this,name,depth);
-				break;
-
-			case ITEM:
-				f = new ItemField<T>(this,name,owner);
-				break;
-
-			case FOREIGN_KEY:
-				f = new ForeignKeyField(this,name,owner,point);
-				break;
+		//Test for duplicate fields
+		if (this.fields.containsKey(name)) {
+			throw new JBaseDuplicateField(this,name);
 		}
-	}*/
+
+		ItemField<T> item = new ItemField<T>(this,name,owner);
+		this.fields.put(name,item);
+		return item;
+	}
+
+
 
 	/**
 	 * Get a field from the database
