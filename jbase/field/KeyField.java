@@ -99,12 +99,13 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	/**
 	 * Inserts a new value into the key field
 	 * @param val The value to insert into the field
+	 * @return The row of the newly inserted item
 	 *
 	 * @throws JBaseFieldActionDenied User does not have permission to execute this action
 	 * @throws JBaseDuplicateData Cannot insert duplicate data into a key field
 	 * @throws JBaseOutOfMemory No more space to insert any more values
 	 */
-	public void insert(T val)
+	public int insert(T val)
 	throws JBaseFieldActionDenied, JBaseDuplicateData, JBaseOutOfMemory {
 		if (!db.getACL().canDo(this,FieldAction.INSERT)) {
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.INSERT);
@@ -124,6 +125,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		Integer row = this.nextRow.pop();
 		by_row.put(row,val);
 		by_value.put(val,row);
+		return row;
 	}
 
 
@@ -152,6 +154,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		//Make the row available to use again
 		this.nextRow.push(row);
 	}
+
 
 
 	/**

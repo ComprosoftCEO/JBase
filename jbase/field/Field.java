@@ -99,12 +99,14 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 * Insert a new value into a key, automatically sorting the values
 	 *
 	 * @param val The value to insert
+	 * @return The row of the newly inserted item
+	 *
 	 * @throws JBaseBadFieldAction The field doesn't support this action
 	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
 	 * @throws JBaseDuplicateData Cannot insert duplicate data into a the field
 	 * @throws JBaseOutOfMemory No more space to insert any more values
 	 */
-	public abstract void insert(T val)
+	public abstract int insert(T val)
 	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseDuplicateData, JBaseOutOfMemory;
 
 

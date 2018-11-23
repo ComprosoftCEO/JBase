@@ -77,9 +77,10 @@ public class ItemField<T extends Serializable> extends Field<T> implements Seria
 	 * Insert a new value into a key, automatically sorting the values
 	 *
 	 * @param val The value to insert
+	 * @return The row of the newly inserted item
 	 * @throws JBaseBadFieldAction The field doesn't support this action
 	 */
-	public void insert(T val) throws JBaseBadFieldAction {
+	public int insert(T val) throws JBaseBadFieldAction {
 		throw new JBaseBadFieldAction(this,FieldAction.INSERT);
 	}
 
