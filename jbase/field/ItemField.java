@@ -98,7 +98,7 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	 * This is not a foreign key, so it returns null
 	 * @return null
 	 */
-	public KeyField getPoint() {
+	public PointableField getPoint() {
 		return null;
 	}
 

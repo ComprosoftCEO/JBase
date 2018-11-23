@@ -10,7 +10,7 @@ import jbase.database.*;
  */
 public class ForeignKeyField extends ItemField<Integer> {
 
-	private final KeyField point;
+	private final PointableField point;
 
 
 	/**
@@ -22,7 +22,7 @@ public class ForeignKeyField extends ItemField<Integer> {
 	 * @param owner Key that owns this field
 	 * @param point Key that this field points to
 	 */
-	public ForeignKeyField(Database db, String name, ParentField owner, KeyField point) {
+	public ForeignKeyField(Database db, String name, ParentField owner, PointableField point) {
 		super(FieldType.FOREIGN_KEY,db,name,owner);
 		this.point = point;
 	}
@@ -34,7 +34,7 @@ public class ForeignKeyField extends ItemField<Integer> {
 	 * @return Point field, or null if it doesn't exist
 	 */
 	@Override
-	public KeyField getPoint() {
+	public PointableField getPoint() {
 		return this.point;
 	}
 

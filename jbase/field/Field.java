@@ -118,7 +118,7 @@ public abstract class Field<T extends Serializable> implements Serializable, JBa
 	 *  Only used by foreign keys.
 	 * @return Point field, or null if it doesn't exist
 	 */
-	public abstract KeyField getPoint();
+	public abstract PointableField getPoint();
 
 
 	/**

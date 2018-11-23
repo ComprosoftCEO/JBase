@@ -13,7 +13,8 @@ import java.util.HashSet;
  * Field where each entry is unique and searchable
  * @author Bryan McClain
  */ 
-public final class KeyField<T extends Comparable<T> & Serializable> extends Field<T> implements ParentField {
+public final class KeyField<T extends Comparable<T> & Serializable> extends Field<T>
+  implements ParentField, PointableField {
 
 
 	//Look up data by either row or value
@@ -103,6 +104,13 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	}
 
 
+	/**
+	 * Test if the given row is valid
+ 	 * @param row The row to test
+	 */
+	public boolean isValidRow(int row) {
+		return by_row.containsKey(row);
+	}
 
 
 	/**
