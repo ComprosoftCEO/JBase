@@ -20,6 +20,7 @@ CLASSES=\
 	jbase/field/FieldType.class \
 	jbase/field/KeyField.class \
 	jbase/field/BSTNode.class \
+	jbase/field/ItemField.class \
 	\
 	jbase/acl/ACL.class \
 	jbase/acl/PermissionType.class \
