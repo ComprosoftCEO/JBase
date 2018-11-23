@@ -6,6 +6,7 @@ import jbase.acl.*;
 
 import java.util.ArrayList;
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 
 
 /**
@@ -17,7 +18,6 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	private final String name;			// Name of this field
 	private final FieldType type;		// Type of this field
 	protected final Database db;		// Database object for this field
-
 
 
 	/**
@@ -49,6 +49,23 @@ public abstract class Field<T extends Serializable> implements Serializable {
 	 */
 	public FieldType getType() {
 		return this.type;
+	}
+
+
+	/**
+	 * Get the class for the type of data stored in this field.
+	 *  This uses some fancy reflection found on Stack Overflow.
+	 *  See {@linktourl https://stackoverflow.com/questions/15084670/how-to-get-the-class-of-type-variable-in-java-generics}
+	 *
+	 * @return Class for the data stored in this field
+	 */
+	public Class<T> getDataType() {
+        ParameterizedType parameterizedType = (ParameterizedType) getClass()
+                .getGenericSuperclass();
+
+        @SuppressWarnings("unchecked")
+        Class<T> ret = (Class<T>) parameterizedType.getActualTypeArguments()[0];
+        return ret;
 	}
 
 	/**
