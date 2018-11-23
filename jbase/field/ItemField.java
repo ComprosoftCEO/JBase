@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Represents an "Item" in our database (field owned by a key)
  * @author Bryan McClain
  */
-public class ItemField<T extends Serializable> extends Field<T> implements Serializable {
+public class ItemField<T extends Serializable> extends Field<T> {
 
 	protected final KeyField owner;
 	protected ArrayList<T> values;

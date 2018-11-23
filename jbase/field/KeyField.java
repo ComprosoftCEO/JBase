@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Field where each entry is unique and searchable
@@ -19,6 +20,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	private TreeMap<Integer,T> by_row;		// Search for a value using the row
 	private TreeMap<T,Integer> by_value;	// Search for a row using the value
 	private Stack<Integer> nextRow;			// List of free rows
+	private Set<ChildField> children;		// All fields that this key field owns
 	private int depth;
 
 

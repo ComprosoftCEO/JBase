@@ -18,6 +18,8 @@ CLASSES=\
 	jbase/field/Field.class \
 	jbase/field/FieldAction.class \
 	jbase/field/FieldType.class \
+	jbase/field/ParentField.class \
+	jbase/field/ChildField.class \
 	jbase/field/KeyField.class \
 	jbase/field/ItemField.class \
 	jbase/field/ForeignKeyField.class \
