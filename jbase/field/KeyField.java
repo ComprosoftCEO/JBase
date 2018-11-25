@@ -113,7 +113,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	 * @return Array of children fields
 	 */
 	public ChildField[] allChildren() {
-		return (ChildField[]) this.children.toArray();
+		return this.children.toArray(new ChildField[this.children.size()]);
 	}
 
 
@@ -141,7 +141,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	 * @return Array of pointer fields
  	 */
 	public PointerField[] allPointers() {
-		return (PointerField[]) this.pointers.toArray();
+		return this.pointers.toArray(new PointerField[this.pointers.size()]);
 	}
 
 	/**

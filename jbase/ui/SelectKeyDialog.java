@@ -59,6 +59,7 @@ public class SelectKeyDialog implements JBaseDialog {
 		while(runMenu());
 	}
 
+
 	/**
 	 * Run the main menu for this dialog
 	 * @return True if to run again, false if not
@@ -72,7 +73,7 @@ public class SelectKeyDialog implements JBaseDialog {
 		if (allKeys.size() > 0) {
 			System.out.println(" E - Edit an existing key field");
 		}
-		System.out.println(" Q - Quit the menu");
+		System.out.println(" Q - Quit the menu\n");
 
 		boolean running = true;
 		while(running) {

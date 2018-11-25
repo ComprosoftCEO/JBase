@@ -64,7 +64,7 @@ public class MainDialog implements JBaseDialog {
 		Set<String> allDB = Database.allDatabases();
 		String dbname = JBaseDialog.readNotNull("Database Name: ", true);
 		while (allDB.contains(dbname)) {
-			System.out.println(">  Database '"+dbname+"' already exists!  <");
+			System.out.println("*** Database '"+dbname+"' already exists! ***");
 			dbname = JBaseDialog.readNotNull("Database Name: ", true);
 		}
 
@@ -116,13 +116,14 @@ public class MainDialog implements JBaseDialog {
 		}
 
 		//Print out all existing databases
+		System.out.println("Databases:");
 		JBaseDialog.printCollection(allDB);
 		System.out.println("");
 
 		//Make sure user enters valid database name
 		String dbname = JBaseDialog.readNotNull("Database Name: ", true);
 		while (!allDB.contains(dbname)) {
-			System.out.println(">  Database '"+dbname+"' doesn't exists!  <");
+			System.out.println("*** Database '"+dbname+"' doesn't exists! ***");
 			dbname = JBaseDialog.readNotNull("Database Name: ", true);
 		}
 
