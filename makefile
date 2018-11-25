@@ -31,6 +31,7 @@ CLASSES=\
 	jbase/acl/PermissionType.class \
 	\
 	jbase/exception/JBaseException.class \
+	jbase/exception/JBaseIOException.class \
 	jbase/exception/JBaseDatabaseException.class \
 	jbase/exception/JBaseDuplicateUser.class \
 	jbase/exception/JBaseUserNotFound.class \

@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Set;
-import java.io.Serializable;
-
+import java.io.*;
 
 /**
  * Represents a JBase Database in memory
@@ -140,9 +139,28 @@ public class Database implements Serializable {
 	/**
 	 * Save the database to a file
 	 * @param filename The file to save to
+	 *
+	 * @throws JBaseDatabaseActionDenied User doesn't have permission to save the database
+	 * @throws JBaseIOException Problem saving to the file
 	 */
-	public void saveDatabase(String filename) {
+	public void saveDatabase(String filename)
+	 throws JBaseDatabaseActionDenied, JBaseIOException {
+		if (!getACL().canDo(DatabaseAction.SAVE_DATABASE)) {
+			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.SAVE_DATABASE);
+		}
 
+		//Save it to a file (might throw an exception)
+		try {
+			FileOutputStream outFile = new FileOutputStream(filename);
+			ObjectOutputStream objOut = new ObjectOutputStream(outFile);
+
+			objOut.writeObject(this);
+
+			objOut.close();
+			outFile.close();
+		} catch (IOException ex) {
+			throw new JBaseIOException(ex);
+		}
 	}
 
 
