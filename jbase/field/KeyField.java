@@ -108,6 +108,14 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	}
 
 
+	/**
+	 * Get the list of all children for this field
+	 * @return Array of children fields
+	 */
+	public ChildField[] allChildren() {
+		return (ChildField[]) this.children.toArray();
+	}
+
 
 	/**
 	 * Remove a child from the children in this field
@@ -126,6 +134,15 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		this.pointers.add(pointer);
 	}
 
+
+
+	/**
+	 * Get the array of all pointers for this field
+	 * @return Array of pointer fields
+ 	 */
+	public PointerField[] allPointers() {
+		return (PointerField[]) this.pointers.toArray();
+	}
 
 	/**
 	 * Remove a pointer field from the list of fields that point to this field

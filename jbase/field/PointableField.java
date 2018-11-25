@@ -27,4 +27,10 @@ public interface PointableField extends JBaseField {
 	 */
 	public void deletePointer(PointerField pointer);
 
+
+	/**
+	 * Get the array of all pointers for this field
+	 * @return Array of pointer fields
+ 	 */
+	public PointerField[] allPointers();
 }

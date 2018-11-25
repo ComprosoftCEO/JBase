@@ -22,6 +22,13 @@ public interface ParentField extends JBaseField {
 
 
 	/**
+	 * Get the list of all children for this field
+	 * @return Array of children fields
+	 */
+	public ChildField[] allChildren();
+
+
+	/**
 	 * Get the depth of this field (number of rows stored)
 	 * @return Depth
 	 */
