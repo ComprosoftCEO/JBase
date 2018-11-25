@@ -57,10 +57,6 @@ CLASSES=\
 	\
 	jbase/ui/JBaseDialog.class \
 	jbase/ui/MainDialog.class \
-	jbase/ui/NewDatabaseDialog.class \
-	jbase/ui/LoadDatabaseDialog.class \
-	jbase/ui/OpenDatabaseDialog.class \
-	\
 	jbase/ui/DatabaseDialog.class \
 	jbase/ui/SelectKeyDialog.class \
 	jbase/ui/KeyDialog.class
