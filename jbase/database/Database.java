@@ -363,7 +363,7 @@ public class Database implements Serializable {
 	 * @return Array of all fields
 	 */
 	public Field[] allFields() {
-		return (Field[]) this.fields.values().toArray();
+		return this.fields.values().toArray(new Field[this.fields.size()]);
 	}
 
 

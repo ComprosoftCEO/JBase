@@ -10,11 +10,6 @@ public class MainDialog implements JBaseDialog {
 	 * Show the dialog for this interface
 	 */
 	public void showDialog() {
-		System.out.println("=============================");
-		System.out.println("|   JBase Database Engine   |");
-		System.out.println("=============================");
-		System.out.println("  Created by Bryan McClain\n");
-
 		//Run the menu until it quits
 		while(runMenu());
 	}
@@ -25,10 +20,14 @@ public class MainDialog implements JBaseDialog {
 	 * @return True if to run again, false if not
 	 */
 	private boolean runMenu() {
-		System.out.println("N - New Database");
-		System.out.println("L - Load Database");
-		System.out.println("O - Open Database");
-		System.out.println("Q - Quit\n");
+		System.out.println("=============================");
+		System.out.println("|   JBase Database Engine   |");
+		System.out.println("=============================");
+		System.out.println("  Created by Bryan McClain\n");
+		System.out.println(" N - New Database");
+		System.out.println(" L - Load Database");
+		System.out.println(" O - Open Database");
+		System.out.println(" Q - Quit\n");
 
 		boolean running = true;
 		while(running) {

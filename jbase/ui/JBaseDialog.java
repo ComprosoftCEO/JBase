@@ -16,6 +16,9 @@ public interface JBaseDialog {
 	 */
 	public void showDialog();
 
+
+	//========== Static Helper Methods ===============
+
 	/**
 	 * Get a single line of input from the user
 	 * @param prompt String to display before the text
@@ -55,4 +58,20 @@ public interface JBaseDialog {
 		}
 	}
 
+
+	/**
+	 * Read an integer from user input
+	 * @param prompt String to display before the text
+	 * @return Integer read
+	 */
+	public static int readInt(String prompt) {
+		while(true) {
+			String line = readLine(prompt);
+			try {
+				return Integer.parseInt(line);
+			} catch (NumberFormatException ex) {
+				System.out.println("Invalid number '"+line+"'!");
+			}
+		}
+	}
 }

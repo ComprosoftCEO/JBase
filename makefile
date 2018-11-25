@@ -62,6 +62,8 @@ CLASSES=\
 	jbase/ui/OpenDatabaseDialog.class \
 	\
 	jbase/ui/DatabaseDialog.class \
+	jbase/ui/SelectKeyDialog.class \
+	jbase/ui/KeyDialog.class
 
 all: $(JAR)
 
