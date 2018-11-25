@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.UUID;
 import java.io.*;
 
 /**
@@ -338,6 +339,21 @@ public class Database implements Serializable {
 		Field f = this.fields.get(name);
 		if (f == null) {throw new JBaseFieldNotFound(this,name);}
 		return f;
+	}
+
+
+
+	/**
+	 * Delete a field from this database.
+	 *  DO NOT TRY TO CALL THIS METHOD DIRECTLY! This method can only 
+	 *   be called by a method inside the Field object.
+	 *
+	 * @param field The field to delete
+	 * @param key Secret key that allows this method to actually delete the field
+	 */
+	public void deleteField(Field field, UUID key) {
+		if (!field.validateUUID(key)) {return;}
+		this.fields.remove(field.getName());
 	}
 
 

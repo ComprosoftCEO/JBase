@@ -7,6 +7,7 @@ import jbase.acl.*;
 import java.util.ArrayList;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
+import java.util.UUID;
 
 
 /**
@@ -17,6 +18,7 @@ public abstract class Field<T extends Serializable> implements Serializable, JBa
 
 	private final String name;			// Name of this field
 	private final FieldType type;		// Type of this field
+	protected final UUID uuid;			// Unique UUID for the field (Used by delete method)
 	protected final Database db;		// Database object for this field
 
 
@@ -31,6 +33,7 @@ public abstract class Field<T extends Serializable> implements Serializable, JBa
 		this.db = db;
 		this.name = name;
 		this.type = type;
+		this.uuid = UUID.randomUUID();
 	}
 
 
@@ -197,4 +200,36 @@ public abstract class Field<T extends Serializable> implements Serializable, JBa
 	 */
 	public abstract int pre(int startRow)
 	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadRow, JBaseEndOfList;
+
+
+
+
+
+	/**
+	 * Delete this field from the database
+	 * @throws JBaseFieldActionDenied User doesn't have permission to delete this field
+	 */
+	public void deleteField() throws JBaseFieldActionDenied {
+		if (!this.db.getACL().canDo(this,FieldAction.DELETE_FIELD)) {
+			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.DELETE_FIELD);
+		}
+		deleteInternal();
+	}
+
+
+	/**
+	 * Internal delete method for the field
+	 */
+	protected abstract void deleteInternal();
+
+
+	/**
+	 * Compare the UUID of two field objects
+	 * @param key The UUID to test
+	 * @return True if the UUID's are equal, false if not
+	 */
+	public boolean validateUUID(UUID key) {
+		return this.uuid.equals(key);
+	}
+
 }

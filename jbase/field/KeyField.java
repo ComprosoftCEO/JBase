@@ -22,6 +22,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	private TreeMap<T,Integer> by_value;	// Search for a row using the value
 	private Stack<Integer> nextRow;			// List of free rows
 	private HashSet<ChildField> children;	// All fields that this key field owns
+	private HashSet<PointerField> pointers;	// All fields that point to me
 	private int depth;
 
 
@@ -39,6 +40,7 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		this.by_value = new TreeMap<T,Integer>();
 		this.nextRow = new Stack<Integer>();
 		this.children = new HashSet<ChildField>();
+		this.pointers = new HashSet<PointerField>();
 		this.depth = depth;
 
 		//Initilize the list of rows
@@ -114,6 +116,25 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	public void deleteChild(ChildField child) {
 		this.children.remove(child);
 	}
+
+
+	/**
+	 * Add a pointer field to the list of fields that point to this field
+	 * @param pointer The field to add to the list
+	 */
+	public void addPointer(PointerField pointer) {
+		this.pointers.add(pointer);
+	}
+
+
+	/**
+	 * Remove a pointer field from the list of fields that point to this field
+	 * @param pointer The pointer to remove from the list
+	 */
+	public void deletePointer(PointerField pointer) {
+		this.pointers.remove(pointer);
+	}
+
 
 
 	/**
@@ -306,4 +327,25 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		return entry.getValue();
 	}
 
+
+
+	/**
+	 * Delete this field from the database
+	 * @throws JBaseFieldActionDenied User doesn't have permission to delete this field
+	 */
+	protected void deleteInternal() {
+		this.db.deleteField(this,this.uuid);
+
+		//Delete all of my children
+		for (ChildField child : this.children) {
+			child.toField().deleteInternal();
+			this.children.remove(child);
+		}
+
+		//Delete all fields that point to me
+		for (PointerField point: this.pointers) {
+			point.toField().deleteInternal();
+			this.pointers.remove(point);
+		}
+	}
 }
