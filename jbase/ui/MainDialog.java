@@ -39,8 +39,8 @@ public class MainDialog implements JBaseDialog {
 			String line = JBaseDialog.readLine("> ");
 			switch(line.toUpperCase()) {
 				case "Q": return false;
-				case "N": newDatabase(); break;
-				case "L": loadDatabase(); break;
+				case "N": newDatabase(); continue;
+				case "L": loadDatabase(); continue;
 				case "O": openDatabase(); break;
 				default:
 					System.out.println("Unknown command '"+line+"'");
@@ -80,10 +80,7 @@ public class MainDialog implements JBaseDialog {
 			System.out.println(ex.getMessage()+"\n");
 			return;
 		}
-
-		//Open the database dialog
-		DatabaseDialog dialog = new DatabaseDialog(db);
-		dialog.showDialog();
+		System.out.println("");
 	}
 
 
@@ -100,7 +97,7 @@ public class MainDialog implements JBaseDialog {
 			return;
 		}
 
-		System.out.println("Database Loaded!");
+		System.out.println("Database Loaded!\n");
 	}
 
 

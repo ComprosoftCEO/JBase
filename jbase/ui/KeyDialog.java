@@ -1,5 +1,6 @@
 package jbase.ui;
 
+import jbase.JBaseAction;
 import jbase.database.Database;
 import jbase.field.*;
 import jbase.exception.*;
@@ -51,6 +52,30 @@ public class KeyDialog implements JBaseDialog {
 
 
 	/**
+	 * Print out the children to the console (along with field type)
+	 */
+	private void printChildren() {
+		ChildField[] children = this.key.allChildren();
+		int i = 1;
+		for (ChildField child : children) {
+			Field f = child.toField();
+			System.out.print(i+": "+f.getName()+
+							 " ("+JBaseAction.enumToString(f.getType()));
+		
+			//Show the field pointing to	
+			if (f.getType() == FieldType.FOREIGN_KEY) {
+				ForeignKeyField fkey = (ForeignKeyField) f;
+				PointableField pointable = fkey.getPoint();
+				System.out.print(" -> "+pointable.toField().getName());
+			}
+			System.out.println(")");
+
+			++i;
+		}
+	}
+
+
+	/**
 	 * Get the list of all keys in the database
 	 * @return list of all keys
 	 */
@@ -86,8 +111,10 @@ public class KeyDialog implements JBaseDialog {
 	private boolean runMenu() {
 		System.out.println("\n=== "+key.getName()+" ===");
 
+		System.out.println("Depth: "+this.key.getDepth());
+		System.out.println("In Use: "+this.key.inUse());
 		System.out.println("Children: ");
-		JBaseDialog.printCollection(this.allChildren());
+		printChildren();
 
 		System.out.println("\n NI - New Item");
 		System.out.println(" NF - New Foreign Key");
@@ -105,7 +132,7 @@ public class KeyDialog implements JBaseDialog {
 				case "NI": newItem(); break;
 				case "NF": newForeignKey(); break;
 				case "DF": deleteField(); break;
-				case "V": viewRecords(); break;
+				case "V": viewRecords(); continue;
 				default: 
 					System.out.println("Unknown command '"+line+"'");
 					continue;

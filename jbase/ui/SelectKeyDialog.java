@@ -118,16 +118,12 @@ public class SelectKeyDialog implements JBaseDialog {
 		}
 
 		//Try to create the field
-		KeyField key;
 		try {
-			key = db.newKey(newKey,depth);
+			db.newKey(newKey,depth);
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 			return;
 		}
-
-		JBaseDialog d = new KeyDialog(this.db,key);
-		d.showDialog();
 	}
 
 
