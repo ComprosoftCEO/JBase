@@ -202,7 +202,8 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	/**
 	 * Internal delete method
 	 */
-	public void deleteInternal() {
+	protected void deleteInternal() {
 		this.db.deleteField(this,this.uuid);
+		this.owner.deleteChild(this);
 	}
 }

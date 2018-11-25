@@ -356,7 +356,6 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 
 	/**
 	 * Delete this field from the database
-	 * @throws JBaseFieldActionDenied User doesn't have permission to delete this field
 	 */
 	protected void deleteInternal() {
 		this.db.deleteField(this,this.uuid);
@@ -364,13 +363,11 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		//Delete all of my children
 		for (ChildField child : this.children) {
 			child.toField().deleteInternal();
-			this.children.remove(child);
 		}
 
 		//Delete all fields that point to me
 		for (PointerField point: this.pointers) {
 			point.toField().deleteInternal();
-			this.pointers.remove(point);
 		}
 	}
 }

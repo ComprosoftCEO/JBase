@@ -90,4 +90,12 @@ public class ForeignKeyField extends ItemField<Integer> implements PointerField 
 		values.set(row,val);
 	}
 
+
+	/**
+	 * Delete this field from the database
+	 */
+	protected void deleteInternal() {
+		super.deleteInternal();
+		this.point.deletePointer(this);
+	}
 }
