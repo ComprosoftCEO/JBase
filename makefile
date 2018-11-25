@@ -56,7 +56,10 @@ CLASSES=\
 	jbase/exception/JBaseFieldActionDenied.class \
 	\
 	jbase/ui/JBaseDialog.class \
-	jbase/ui/MainDialog.class
+	jbase/ui/MainDialog.class \
+	jbase/ui/NewDatabaseDialog.class \
+	jbase/ui/LoadDatabaseDialog.class \
+	jbase/ui/OpenDatabaseDialog.class
 
 all: $(JAR)
 

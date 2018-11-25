@@ -1,7 +1,5 @@
 package jbase.ui;
 
-import java.util.Scanner;
-
 /**
  * Main dialog class for interacting with JBase using CLI
  * @author Bryan McClain
@@ -30,16 +28,28 @@ public class MainDialog implements JBaseDialog {
 		System.out.println("N - New Database");
 		System.out.println("L - Load Database");
 		System.out.println("O - Open Database");
-		System.out.println("Q - Quit");
+		System.out.println("Q - Quit\n");
 
 		boolean running = true;
-		Scanner scan = new Scanner(System.in);
 		while(running) {
-			String line = scan.nextLine();
-			
+			String line = JBaseDialog.readLine("> ");
+		
+			JBaseDialog d;
+			switch(line.toUpperCase()) {
+				case "Q": return false;
+				case "N": d = new NewDatabaseDialog(); break;
+				case "L": d = new LoadDatabaseDialog(); break;
+				case "O": d = new OpenDatabaseDialog(); break;
+				default:
+					System.out.println("Unknown command '"+line+"'");
+					continue;
+			}
+
+			d.showDialog();
+			running = false;
 		}
 
-		return false;
+		return true;
 	}
 
 
