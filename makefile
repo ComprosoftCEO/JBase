@@ -21,6 +21,8 @@ CLASSES=\
 	jbase/field/JBaseField.class \
 	jbase/field/ParentField.class \
 	jbase/field/ChildField.class \
+	jbase/field/PointableField.class \
+	jbase/field/PointerField.class \
 	jbase/field/KeyField.class \
 	jbase/field/ItemField.class \
 	jbase/field/ForeignKeyField.class \

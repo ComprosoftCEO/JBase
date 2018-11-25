@@ -104,21 +104,6 @@ public abstract class Field<T extends Serializable> implements Serializable, JBa
 	  throws JBaseBadFieldAction, JBaseFieldActionDenied, JBaseBadResize;
 
 
-	/**
-	 * Get the field that owns this field.
-	 *  Only used by items and foreign keys
-	 * @return Owner Key field, or null if it doesn't exist
-	 */
-	public abstract ParentField getOwner();
-
-
-
-	/**
-	 * Get the key field that this field points to.
-	 *  Only used by foreign keys.
-	 * @return Point field, or null if it doesn't exist
-	 */
-	public abstract PointableField getPoint();
 
 
 	/**

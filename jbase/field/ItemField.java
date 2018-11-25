@@ -93,16 +93,6 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	}
 
 
-	/**
-	 * Get the key field that this field points to.
-	 * This is not a foreign key, so it returns null
-	 * @return null
-	 */
-	public PointableField getPoint() {
-		return null;
-	}
-
-
 
 	/**
 	 * Insert a new value into a key, automatically sorting the values

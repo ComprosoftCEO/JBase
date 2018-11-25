@@ -8,7 +8,7 @@ import jbase.database.*;
  * Field owned by a key that "points" to another key
  * @author Bryan McClain
  */
-public class ForeignKeyField extends ItemField<Integer> {
+public class ForeignKeyField extends ItemField<Integer> implements PointerField {
 
 	private final PointableField point;
 

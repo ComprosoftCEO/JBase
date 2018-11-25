@@ -87,22 +87,6 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 	}
 
 
-	/**
-	 * Get the key field that owns this field.
-	 * @return Owner Key field, or null if it doesn't exist
-	 */
-	public KeyField getOwner() {
-		return null;	/* Keys don't have owners */
-	}
-
-	/**
-	 * Get the key field that this field points to.
-	 * @return Point field, or null if it doesn't exist
-	 */
-	public KeyField getPoint() {
-		return null;	/* Keys don't have point */
-	}
-
 
 	/**
 	 * Test if the given row is valid

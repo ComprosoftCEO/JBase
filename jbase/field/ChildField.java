@@ -14,4 +14,11 @@ public interface ChildField extends JBaseField {
 	 */
 	public void resize(ParentField parent);
 
+
+	/**
+	 * Get the field that owns this field.
+	 *  Only used by items and foreign keys
+	 * @return Owner Key field, or null if it doesn't exist
+	 */
+	public abstract ParentField getOwner();
 }
