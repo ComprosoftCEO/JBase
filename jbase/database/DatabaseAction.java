@@ -8,9 +8,9 @@ import jbase.JBaseAction;
  */
 public enum DatabaseAction implements JBaseAction {
 	LOGIN,
-	SAVE,
-	RESTORE,
-	DROP,
+	SAVE_DATABASE,
+	RESTORE_DATABASE,
+	DROP_DATABASE,
 	CREATE_FIELD,
 	VIEW_USERS,
 	ADD_USER,

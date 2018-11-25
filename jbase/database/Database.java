@@ -120,11 +120,20 @@ public class Database implements Serializable {
 	//================Save and Load================
 
 	/**
-	 * Release the database from memory
-	 * @throws JBaseException
+	 * Release the database from memory.
+	 *  The database object will continue to exist,
+	 *   but it won't be in the list of databases anymore.
+	 *
+	 * @throws JBaseDatabaseActionDenied User doesn't have permission to drop the database
 	 */
-	public void dropDatabase() throws JBaseException {
+	public void dropDatabase()
+	  throws JBaseDatabaseActionDenied {
+		if (!getACL().canDo(DatabaseAction.DROP_DATABASE)) {
+			throw new JBaseDatabaseActionDenied(currentUser(),this,DatabaseAction.DROP_DATABASE);
+		}
 
+		//Remove the database from the list
+		allDatabases.remove(this.dbname, this);
 	}
 
 
