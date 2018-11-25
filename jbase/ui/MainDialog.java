@@ -25,7 +25,7 @@ public class MainDialog implements JBaseDialog {
 	 * @return True if to run again, false if not
 	 */
 	private boolean runMenu() {
-		System.out.println("=============================");
+		System.out.println("\n=============================");
 		System.out.println("|   JBase Database Engine   |");
 		System.out.println("=============================");
 		System.out.println("  Created by Bryan McClain\n");

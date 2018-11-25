@@ -66,12 +66,13 @@ public class SelectKeyDialog implements JBaseDialog {
 	 */
 	private boolean runMenu() {
 		Set<String> allKeys = this.allKeys();
-		System.out.println("=== "+this.db.getDBName()+" Fields: ===");
+		System.out.println("\n=== "+this.db.getDBName()+" Fields: ===");
 		JBaseDialog.printCollection(allKeys);
 
 		System.out.println("\n N - Create a new key field");
 		if (allKeys.size() > 0) {
 			System.out.println(" E - Edit an existing key field");
+			System.out.println(" D - Delete a key field");
 		}
 		System.out.println(" Q - Quit the menu\n");
 
@@ -83,6 +84,8 @@ public class SelectKeyDialog implements JBaseDialog {
 				case "N": newKey(); break;
 				case "E":
 					if (allKeys.size() > 0) {editKey(); break;}
+				case "D":
+					if (allKeys.size() > 0) {deleteKey(); break;}
 				default:
 					System.out.println("Unknown command '"+line+"'");
 					continue;
@@ -152,5 +155,29 @@ public class SelectKeyDialog implements JBaseDialog {
 
 		JBaseDialog d = new KeyDialog(this.db,key);
 		d.showDialog();
+	}
+
+
+
+	/**
+	 * Delete an existing key
+	 */
+	private void deleteKey() {
+
+		//Get the key field
+		Set<String> allKeys = this.allKeys();
+		String newKey = JBaseDialog.readNotNull("Delete Key: ", true);
+		while (!allKeys.contains(newKey)) {
+			System.out.println("*** Unknown key field '"+newKey+"' ***");
+			newKey = JBaseDialog.readNotNull("Delete Key: ", true);
+		}
+
+		//Try to delete the field
+		try {
+			this.db.getField(newKey).deleteField();
+		} catch (JBaseException ex) {
+			System.out.println(ex.getMessage()+"\n");
+			return;
+		}
 	}
 }
