@@ -38,7 +38,7 @@ public class DatabaseDialog implements JBaseDialog {
 		System.out.println(" S - Save Database");
 		System.out.println(" R - Restore Database");
 		System.out.println(" D - Drop Database");
-		System.out.println(" Q - Quit (Logout)");
+		System.out.println(" Q - Quit (Logout)\n");
 
 		boolean running = true;
 		while(running) {

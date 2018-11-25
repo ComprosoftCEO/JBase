@@ -66,7 +66,7 @@ public class SelectKeyDialog implements JBaseDialog {
 	 */
 	private boolean runMenu() {
 		Set<String> allKeys = this.allKeys();
-		System.out.println("Fields:");
+		System.out.println("=== "+this.db.getDBName()+" Fields: ===");
 		JBaseDialog.printCollection(allKeys);
 
 		System.out.println("\n N - Create a new key field");

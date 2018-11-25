@@ -51,6 +51,20 @@ public class KeyDialog implements JBaseDialog {
 
 
 	/**
+	 * Get the list of all keys in the database
+	 * @return list of all keys
+	 */
+	private Set<String> allKeys() {
+		Field[] allFields = this.db.allFields();
+		Set<String> set = new HashSet<String>();
+		for (Field f : allFields) {
+			if (f.getType() == FieldType.KEY) {set.add(f.getName());}
+		}
+		return set;
+	}
+
+
+	/**
 	 * Get the list of all fields in the database
 	 * @return List of all fields
 	 */
@@ -62,6 +76,7 @@ public class KeyDialog implements JBaseDialog {
 		}
 		return set;
 	}
+
 
 
 	/**
@@ -88,7 +103,7 @@ public class KeyDialog implements JBaseDialog {
 			switch(line.toUpperCase()) {
 				case "Q": return false;
 				case "NI": newItem(); break;
-//				case "NF": newForeignKey(); break;
+				case "NF": newForeignKey(); break;
 				case "V": viewRecords(); break;
 				default: 
 					System.out.println("Unknown command '"+line+"'");
@@ -107,7 +122,7 @@ public class KeyDialog implements JBaseDialog {
 	 * Create a new item field
 	 */
 	private void newItem() {
-		//Get the new key field
+		//Get the new item field
 		Set<String> allFields = this.allFields();
 		String newItem = JBaseDialog.readNotNull("New Item Name: ", true);
 		while (allFields.contains(newItem)) {
@@ -120,6 +135,41 @@ public class KeyDialog implements JBaseDialog {
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 		}
+	}
+
+
+
+	/**
+	 * Create a new foreign key field
+	 */
+	private void newForeignKey() {
+		//Get the new foreign key name
+		Set<String> allFields = this.allFields();
+		String newItem = JBaseDialog.readNotNull("New Foreign Key Name: ", true);
+		while (allFields.contains(newItem)) {
+			System.out.println("*** Field '"+newItem+"' already exists ***");
+			newItem = JBaseDialog.readNotNull("New Foreign Key Name: ", true);
+		}
+
+		//Get what field it points to:
+		Set<String> allKeys = this.allKeys();
+		System.out.println("\nDatabase Keys: ");
+		JBaseDialog.printCollection(allKeys);
+		System.out.println("");
+
+		String pointerField = JBaseDialog.readNotNull("Pointer Field: ", true);
+		while(!allKeys.contains(pointerField)) {
+			System.out.println("*** Field '"+newItem+"' does not exist ***");
+			pointerField = JBaseDialog.readNotNull("Pointer Field: ", true);
+		}
+
+		try {
+			this.db.newForeignKey(newItem,this.key,(KeyField) this.db.getField(pointerField));
+		} catch (JBaseException ex) {
+			System.out.println(ex.getMessage()+"\n");
+		}
+
+
 	}
 
 
