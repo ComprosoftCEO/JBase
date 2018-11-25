@@ -164,12 +164,46 @@ public class Database implements Serializable {
 	}
 
 
+	/**
+	 *
+	 *
+	 *
+	 */
 	public void restoreDatabase(String filename) {
 
 	}
 
-	public static void loadDatabase(String filename) {
 
+	/**
+	 * Load a database from a file, and add it to the list of databases
+	 * @param filename The file to load
+	 *
+	 */
+	public static void loadDatabase(String filename)
+	 throws JBaseIOException, JBaseBadDatabase, JBaseDuplicateDatabase {
+
+		Database db;
+		try {
+			FileInputStream inFile = new FileInputStream(filename);
+			ObjectInputStream objIn = new ObjectInputStream(inFile);
+			
+			db = (Database) objIn.readObject();
+
+			objIn.close();
+			inFile.close();
+		} catch (ClassNotFoundException ex) {
+			throw new JBaseBadDatabase(filename);
+		} catch (InvalidClassException ex) {
+			throw new JBaseBadDatabase(filename);
+		} catch (IOException ex) {
+			throw new JBaseIOException(ex);
+		}
+
+		//Make sure the database doesn't already exist
+		if (allDatabases.containsKey(db.dbname)) {
+			throw new JBaseDuplicateDatabase(allDatabases.get(db.dbname));
+		}
+		allDatabases.put(db.dbname,db);
 	}
 
 

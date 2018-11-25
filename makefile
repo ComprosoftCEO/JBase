@@ -32,11 +32,15 @@ CLASSES=\
 	\
 	jbase/exception/JBaseException.class \
 	jbase/exception/JBaseIOException.class \
+	jbase/exception/JBaseBadDatabase.class \
+	\
 	jbase/exception/JBaseDatabaseException.class \
+	jbase/exception/JBaseDuplicateDatabase.class \
 	jbase/exception/JBaseDuplicateUser.class \
 	jbase/exception/JBaseUserNotFound.class \
 	jbase/exception/JBaseFieldNotFound.class \
 	jbase/exception/JBaseDuplicateField.class \
+	\
 	jbase/exception/JBaseFieldException.class \
 	jbase/exception/JBaseBadFieldAction.class \
 	jbase/exception/JBaseDuplicateData.class \
@@ -45,6 +49,7 @@ CLASSES=\
 	jbase/exception/JBaseEndOfList.class \
 	jbase/exception/JBaseBadResize.class \
 	jbase/exception/JBaseOutOfMemory.class \
+	\
 	jbase/exception/JBasePermissionException.class \
 	jbase/exception/JBaseDatabaseActionDenied.class \
 	jbase/exception/JBaseACLEditDenied.class \
