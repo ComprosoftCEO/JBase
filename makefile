@@ -9,7 +9,6 @@ MANIFEST=manifest.txt
 # Classes to include
 CLASSES=\
 	jbase/JBaseAction.class \
-	jbase/ui/Test.class \
 	\
 	jbase/database/Database.class \
 	jbase/database/DatabaseAction.class \
@@ -54,12 +53,15 @@ CLASSES=\
 	jbase/exception/JBasePermissionException.class \
 	jbase/exception/JBaseDatabaseActionDenied.class \
 	jbase/exception/JBaseACLEditDenied.class \
-	jbase/exception/JBaseFieldActionDenied.class
+	jbase/exception/JBaseFieldActionDenied.class \
+	\
+	jbase/ui/JBaseDialog.class \
+	jbase/ui/MainDialog.class
 
 all: $(JAR)
 
 $(JAR): $(CLASSES) $(MANIFEST)
-	jar cvfm $@ $(MANIFEST) $(ENTRY) $^
+	jar cvfm $@ $(MANIFEST) $(CLASSES)
 
 %.class: %.java
 	javac $<
