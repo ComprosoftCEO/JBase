@@ -159,18 +159,45 @@ public class Database implements Serializable {
 			objOut.close();
 			outFile.close();
 		} catch (IOException ex) {
-			throw new JBaseIOException(ex);
+			throw new JBaseIOException(filename,ex);
 		}
 	}
 
 
 	/**
+	 * Replace the data in an existing database.
+	 *  To use the updated database, you will need a new call to getDatabase()
 	 *
+	 * @param filename The file to load from
 	 *
-	 *
+	 * @throws JBaseIOException Problem reading from the file
+	 * @throws JBaseBadDatabase File does not contain a valid database
+	 * @throws JBaseWrongDatabase Database being restored does not match the signature of this database
 	 */
-	public void restoreDatabase(String filename) {
+	public void restoreDatabase(String filename)
+	 throws JBaseIOException, JBaseBadDatabase, JBaseWrongDatabase {
+		Database db;
+		try {
+			FileInputStream inFile = new FileInputStream(filename);
+			ObjectInputStream objIn = new ObjectInputStream(inFile);
+			
+			db = (Database) objIn.readObject();
 
+			objIn.close();
+			inFile.close();
+		} catch (ClassNotFoundException ex) {
+			throw new JBaseBadDatabase(filename);
+		} catch (InvalidClassException ex) {
+			throw new JBaseBadDatabase(filename);
+		} catch (IOException ex) {
+			throw new JBaseIOException(filename,ex);
+		}
+
+		//Make sure the database name matches
+		if (!db.dbname.equals(this.dbname)) {
+			throw new JBaseWrongDatabase(this,db.dbname);
+		}
+		allDatabases.put(db.dbname,db);
 	}
 
 
@@ -178,6 +205,9 @@ public class Database implements Serializable {
 	 * Load a database from a file, and add it to the list of databases
 	 * @param filename The file to load
 	 *
+	 * @throws JBaseIOException Problem reading from the file
+	 * @throws JBaseBadDatabase File does not contain a valid database
+	 * @throws JBaseDuplicateDatabase Cannot load a database that already exists
 	 */
 	public static void loadDatabase(String filename)
 	 throws JBaseIOException, JBaseBadDatabase, JBaseDuplicateDatabase {
@@ -196,7 +226,7 @@ public class Database implements Serializable {
 		} catch (InvalidClassException ex) {
 			throw new JBaseBadDatabase(filename);
 		} catch (IOException ex) {
-			throw new JBaseIOException(ex);
+			throw new JBaseIOException(filename,ex);
 		}
 
 		//Make sure the database doesn't already exist

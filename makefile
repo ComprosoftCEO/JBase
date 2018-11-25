@@ -40,6 +40,7 @@ CLASSES=\
 	jbase/exception/JBaseUserNotFound.class \
 	jbase/exception/JBaseFieldNotFound.class \
 	jbase/exception/JBaseDuplicateField.class \
+	jbase/exception/JBaseWrongDatabase.class \
 	\
 	jbase/exception/JBaseFieldException.class \
 	jbase/exception/JBaseBadFieldAction.class \
