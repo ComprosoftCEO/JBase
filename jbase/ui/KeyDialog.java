@@ -104,6 +104,7 @@ public class KeyDialog implements JBaseDialog {
 				case "Q": return false;
 				case "NI": newItem(); break;
 				case "NF": newForeignKey(); break;
+				case "DF": deleteField(); break;
 				case "V": viewRecords(); break;
 				default: 
 					System.out.println("Unknown command '"+line+"'");
@@ -168,12 +169,34 @@ public class KeyDialog implements JBaseDialog {
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 		}
-
-
 	}
 
 
+	/**
+	 * Delete a child field from this key
+	 */
+	private void deleteField() {
 
+		//Get the field to delete
+		Set<String> allFields = this.allChildren();
+		if (allFields.size() <= 0) {
+			System.out.println("No fields to delete!\n");
+			return;
+		}
+
+		String toDelete = JBaseDialog.readNotNull("Field to Delete: ", true);
+		while (!allFields.contains(toDelete)) {
+			System.out.println("*** Field '"+toDelete+"' does not exist ***");
+			toDelete = JBaseDialog.readNotNull("Field to Delete: ", true);
+		}
+
+		try {
+			this.db.getField(toDelete).deleteField();
+
+		} catch (JBaseException ex) {
+			System.out.println(ex.getMessage()+"\n");
+		}
+	}
 
 
 	/**
