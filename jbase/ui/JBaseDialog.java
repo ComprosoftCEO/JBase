@@ -55,6 +55,7 @@ public interface JBaseDialog {
 		int i = 1;
 		for (E item: c) {
 			System.out.println(i+": "+item.toString());
+			++i;
 		}
 	}
 

@@ -85,7 +85,7 @@ public class KeyDialog implements JBaseDialog {
 		boolean running = true;
 		while (running) {
 			String line = JBaseDialog.readLine("> ");
-			switch(line) {
+			switch(line.toUpperCase()) {
 				case "Q": return false;
 				case "NI": newItem(); break;
 //				case "NF": newForeignKey(); break;
@@ -136,7 +136,7 @@ public class KeyDialog implements JBaseDialog {
 		//Get the header
 		table[0][0] = this.key.getName();
 		for (int i = 0; i < children.length; ++i) {
-			table[0][i] = children[i].toField().getName();
+			table[0][i+1] = children[i].toField().getName();
 		}
 
 		//Keep going until the end of the list
@@ -162,7 +162,9 @@ public class KeyDialog implements JBaseDialog {
 			//Get the biggest entry in each column
 			int max = 0;
 			for (int j = 0; j < table.length; ++j) {
-				if (table[j][i].length() > max) {max = table[j][i].length();}
+				if (table[j][i].length() > max) {
+					max = table[j][i].length();
+				}
 			}
 			bigCol[i] = max;
 		}
