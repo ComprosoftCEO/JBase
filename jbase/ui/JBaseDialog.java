@@ -15,8 +15,6 @@ public interface JBaseDialog {
 	 */
 	public void showDialog();
 
-
-
 	/**
 	 * Get a single line of input from the user
 	 * @param prompt String to display before the text

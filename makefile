@@ -59,7 +59,9 @@ CLASSES=\
 	jbase/ui/MainDialog.class \
 	jbase/ui/NewDatabaseDialog.class \
 	jbase/ui/LoadDatabaseDialog.class \
-	jbase/ui/OpenDatabaseDialog.class
+	jbase/ui/OpenDatabaseDialog.class \
+	\
+	jbase/ui/DatabaseDialog.class \
 
 all: $(JAR)
 

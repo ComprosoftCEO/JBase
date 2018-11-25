@@ -55,7 +55,7 @@ public class Database implements Serializable {
 	 * @param rootPass Password for the root user of the database
 	 * @return The newly created database
 	 * 
-	 * @throws JBaseException
+	 * @throws JBaseException Database already exists
 	 */
 	public static Database newDatabase(String dbname, String rootUser, String rootPass) throws JBaseException {
 
@@ -102,9 +102,8 @@ public class Database implements Serializable {
 	 * Get a list of all currently loaded databases
 	 * @return String array of all databases
 	 */
-	public static String[] allDatabases() {
-		Set<String> vals = allDatabases.keySet();
-		return (String[]) vals.toArray();
+	public static Set<String> allDatabases() {
+		return allDatabases.keySet();
 	}
 
 
