@@ -1,6 +1,7 @@
 package jbase.ui;
 
 import java.util.Scanner;
+import java.util.Collection;
 
 /**
  * Interface for interacting with any JBase Dialog
@@ -41,6 +42,17 @@ public interface JBaseDialog {
 			if (trim) {ret = ret.trim();}
 		} while(ret.equals(""));
 		return ret;
+	}
+
+	/**
+	 * Print out a collection of items to the terminal
+	 * @param c The collection to print
+	 */
+	public static <E> void printCollection(Collection<E> c) {
+		int i = 1;
+		for (E item: c) {
+			System.out.println(i+": "+item.toString());
+		}
 	}
 
 }

@@ -29,11 +29,12 @@ public class NewDatabaseDialog implements JBaseDialog {
 		String username = JBaseDialog.readNotNull("Root Username: ",true);
 		String password = JBaseDialog.readNotNull("Root Password: ",true);
 
+		//Try to create the database
 		Database db;
 		try {
 			db = Database.newDatabase(dbname,username,password);
 		} catch (JBaseException ex) {
-			System.out.println(ex.getMessage());
+			System.out.println(ex.getMessage()+"\n");
 			return;
 		}
 
