@@ -19,6 +19,7 @@ import java.io.*;
 public class Database implements Serializable {
 
 	private final String dbname;				// Name of the database
+	private final UUID uuid;					// Unique UUID for this database
 	private HashMap<String,Field> fields;		// List of fields this database owns
 	private HashMap<String,User> users;			// List of users in the database
 	private User currentUser;					// Current user logged in to the database
@@ -36,6 +37,7 @@ public class Database implements Serializable {
 	 */
 	private Database(String dbname, String rootUser, String rootPass) {
 		this.dbname = dbname;
+		this.uuid = UUID.randomUUID();
 		this.fields = new HashMap<String,Field>();
 		this.users = new HashMap<String,User>();
 
@@ -194,9 +196,9 @@ public class Database implements Serializable {
 			throw new JBaseIOException(filename,ex);
 		}
 
-		//Make sure the database name matches
-		if (!db.dbname.equals(this.dbname)) {
-			throw new JBaseWrongDatabase(this,db.dbname);
+		//Make sure the database uuid matches
+		if (!db.uuid.equals(this.uuid)) {
+			throw new JBaseWrongDatabase(this,this.uuid,db.uuid);
 		}
 		allDatabases.put(db.dbname,db);
 	}
