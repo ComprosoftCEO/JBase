@@ -21,7 +21,7 @@ public class NewDatabaseDialog implements JBaseDialog {
 		Set<String> allDB = Database.allDatabases();
 		String dbname = JBaseDialog.readNotNull("Database Name: ", true);
 		while (allDB.contains(dbname)) {
-			System.out.println("**Database '"+dbname+"' already exists!**");
+			System.out.println(">  Database '"+dbname+"' already exists!  <");
 			dbname = JBaseDialog.readNotNull("Database Name: ", true);
 		}
 
