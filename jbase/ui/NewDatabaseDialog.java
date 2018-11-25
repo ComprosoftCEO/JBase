@@ -19,23 +19,15 @@ public class NewDatabaseDialog implements JBaseDialog {
 
 		//Get database name
 		Set<String> allDB = Database.allDatabases();
-		String dbname = JBaseDialog.readLine("Database Name: ");
+		String dbname = JBaseDialog.readNotNull("Database Name: ", true);
 		while (allDB.contains(dbname)) {
 			System.out.println("**Database '"+dbname+"' already exists!**");
-			dbname = JBaseDialog.readLine("Database Name: ");
+			dbname = JBaseDialog.readNotNull("Database Name: ", true);
 		}
 
-		//Get username
-		String username = "";
-		while(username.trim().equals("")) {
-			username = JBaseDialog.readLine("Root Username: ");
-		}
-
-		//Get password (cannot be null)
-		String password = "";
-		while(password.trim().equals("")) {
-			password = JBaseDialog.readLine("Root Password: ");
-		}
+		//Get username and password (cannot be empty)
+		String username = JBaseDialog.readNotNull("Root Username: ",true);
+		String password = JBaseDialog.readNotNull("Root Password: ",true);
 
 		Database db;
 		try {
