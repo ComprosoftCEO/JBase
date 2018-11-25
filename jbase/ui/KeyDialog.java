@@ -51,6 +51,20 @@ public class KeyDialog implements JBaseDialog {
 
 
 	/**
+	 * Get the list of all fields in the database
+	 * @return List of all fields
+	 */
+	private Set<String> allFields() {
+		Field[] allFields = this.db.allFields();
+		Set<String> set = new HashSet<String>();
+		for (Field f : allFields) {
+			set.add(f.getName());
+		}
+		return set;
+	}
+
+
+	/**
 	 * Run the main menu for this dialog
 	 * @return True if to run again, false if not
 	 */
@@ -73,6 +87,8 @@ public class KeyDialog implements JBaseDialog {
 			String line = JBaseDialog.readLine("> ");
 			switch(line) {
 				case "Q": return false;
+				case "NI": newItem(); break;
+//				case "NF": newForeignKey(); break;
 				case "V": viewRecords(); break;
 				default: 
 					System.out.println("Unknown command '"+line+"'");
@@ -84,6 +100,29 @@ public class KeyDialog implements JBaseDialog {
 
 		return true;
 	}
+
+
+
+	/**
+	 * Create a new item field
+	 */
+	private void newItem() {
+		//Get the new key field
+		Set<String> allFields = this.allFields();
+		String newItem = JBaseDialog.readNotNull("New Item Name: ", true);
+		while (allFields.contains(newItem)) {
+			System.out.println("*** Field '"+newItem+"' already exists ***");
+			newItem = JBaseDialog.readNotNull("New Item Name: ", true);
+		}
+
+		try {
+			this.db.newItem(newItem,this.key);
+		} catch (JBaseException ex) {
+			System.out.println(ex.getMessage()+"\n");
+		}
+	}
+
+
 
 
 
