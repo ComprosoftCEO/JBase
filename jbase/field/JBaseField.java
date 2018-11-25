@@ -13,6 +13,6 @@ public interface JBaseField {
 	 * Convert a JBase field interface into an actual field object
 	 * @return Field object
 	 */
-	public <T extends Serializable> Field<T> toField();
+	public Field toField();
 
 }

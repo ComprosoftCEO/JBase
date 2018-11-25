@@ -38,8 +38,8 @@ public abstract class Field<T extends Serializable> implements Serializable, JBa
 	 * Convert a JBase field interface into an actual field object
 	 * @return Field object
 	 */
-	public <T extends Serializable> Field<T> toField() {
-		return (Field<T>) this;
+	public Field toField() {
+		return this;
 	}
 
 
