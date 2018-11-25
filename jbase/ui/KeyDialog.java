@@ -2,6 +2,7 @@ package jbase.ui;
 
 import jbase.database.Database;
 import jbase.field.*;
+import jbase.exception.*;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -67,7 +68,7 @@ public class KeyDialog implements JBaseDialog {
 		System.out.println(" V  - View all records");
 		System.out.println(" Q  - Quit\n");
 
-		boolean running = false;
+		boolean running = true;
 		while (running) {
 			String line = JBaseDialog.readLine("> ");
 			switch(line) {
@@ -87,9 +88,53 @@ public class KeyDialog implements JBaseDialog {
 
 
 	/**
-	 * Dump all records in the database
+	 * Dump all records in the database. Prints them in a nicely formatted table.
 	 */
-	private static void viewRecords() {
-		
+	private void viewRecords() {
+		ChildField children[] = this.key.allChildren();
+		String table[][] = new String[this.key.inUse()+1][children.length+1];
+
+		//Get the header
+		table[0][0] = this.key.getName();
+		for (int i = 0; i < children.length; ++i) {
+			table[0][i] = children[i].toField().getName();
+		}
+
+		//Keep going until the end of the list
+		try {
+			int row = -1;
+			int tableRow = 1;
+			while(true) {
+				row = this.key.next(row);
+				table[tableRow][0] = this.key.get(row).toString();
+				for (int i = 0; i < children.length; ++i) {
+					table[tableRow][i] = children[i].toField().get(row).toString();
+				}
+				tableRow+=1;
+			}
+		} catch (JBaseEndOfList eol) {/* Don't throw an error */
+		} catch (JBaseException ex) {
+			System.out.println(ex.getMessage()+"\n");
+		}
+
+		//Figure out the biggest entry in each column
+		int bigCol[] = new int[children.length+1];
+		for (int i = 0; i < table[0].length; ++i) {
+			//Get the biggest entry in each column
+			int max = 0;
+			for (int j = 0; j < table.length; ++j) {
+				if (table[j][i].length() > max) {max = table[j][i].length();}
+			}
+			bigCol[i] = max;
+		}
+
+		//Now print the table
+		for (int i = 0; i < table.length; ++i) {
+			System.out.print("|");
+			for (int j = 0; j < table[i].length; ++j) {
+				System.out.print(String.format("%-"+bigCol[j]+"s|",table[i][j]));
+			}
+			System.out.println("");
+		}
 	}
 }

@@ -59,6 +59,14 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		return this.depth;
 	}
 
+	/**
+	 * Figure out how many entires are currently in use
+	 * @return In Use
+	 */
+	public int inUse() {
+		return this.depth - this.nextRow.size();
+	}
+
 
 	/**
 	 * Add more rows to this field
