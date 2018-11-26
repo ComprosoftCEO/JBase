@@ -100,9 +100,10 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 
 	/**
 	 * Test if the given row is valid
- 	 * @param row The row to test
+ 	 * @param row The row to test (-1 is allows)
 	 */
 	public boolean isValidRow(int row) {
+		if (row == -1) {return true; /* -1 = Null */}
 		return by_row.containsKey(row);
 	}
 

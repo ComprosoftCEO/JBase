@@ -200,7 +200,7 @@ public class KeyDialog implements JBaseDialog {
 
 		String pointerField = JBaseDialog.readNotNull("Pointer Field: ", true);
 		while(!allKeys.contains(pointerField)) {
-			System.out.println("*** Field '"+newItem+"' does not exist ***");
+			System.out.println("*** Field '"+pointerField+"' does not exist ***");
 			pointerField = JBaseDialog.readNotNull("Pointer Field: ", true);
 		}
 
@@ -245,9 +245,12 @@ public class KeyDialog implements JBaseDialog {
 	 * @param db the database of the field
 	 * @param key The key field to get a record from
 	 * @param prompt Field to display for the prompt
-	 * @return row of the record
+	 * @return row of the record, or -1 on error
 	 */
 	private static int getRecord(Database db, KeyField key, String prompt) {
+
+		if (key.inUse() <= 0) {return -1;}
+
 		//Print out the records to the screen
 		KeyDialog d = new KeyDialog(db,key);
 		d.viewRecords();

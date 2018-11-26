@@ -43,7 +43,7 @@ public class ForeignKeyField extends ItemField<Integer> implements PointerField 
 	/**
 	 * Get a value stored at a given row in the field
 	 * @param row The row to retrieve
-	 * @return The value stored at the row (can be null)
+	 * @return The value stored at the row (can be -1)
 	 *
 	 * @throws JBaseBadFieldAction The field doesn't support this action
 	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
@@ -66,7 +66,7 @@ public class ForeignKeyField extends ItemField<Integer> implements PointerField 
 	/**
 	 * Store a value stored at a given row in the field
 	 * @param row The row to store
-	 * @param val The value stored at the row
+	 * @param val The value stored at the row (-1 = No Row)
 	 *
 	 * @throws JBaseBadFieldAction The field doesn't support this action
 	 * @throws JBaseFieldActionDenied User doesn't have permission to execute this action
@@ -83,7 +83,7 @@ public class ForeignKeyField extends ItemField<Integer> implements PointerField 
 			throw new JBaseBadRow(this,row);
 		}
 
-		if (val < 0 || val >= this.owner.getDepth()) {
+		if (!point.isValidRow(val)) {
 			throw new JBaseBadRow(this,val);
 		}
 
