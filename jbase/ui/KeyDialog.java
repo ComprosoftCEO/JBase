@@ -131,11 +131,14 @@ public class KeyDialog implements JBaseDialog {
 				case "Q": return false;
 				case "NI": newItem(); break;
 				case "NF": newForeignKey(); break;
+				case "I": newRecord(); continue;
 				case "V": viewRecords(); continue;
 				case "DF":
 					if (this.allChildren().size() > 0) {
 						if (deleteField()) {break;} else {continue;}
 					}
+				case "D":
+					if (this.key.inUse() > 0) {deleteRecord(); continue;}
 				default: 
 					System.out.println("Unknown command '"+line+"'");
 					continue;
@@ -228,17 +231,36 @@ public class KeyDialog implements JBaseDialog {
 	}
 
 
+
+	/**
+	 * Create a new record in the database
+	 */
+	private void newRecord() {
+
+	}
+
+
+
+	/**
+	 * Delete a record from the database
+	 */
+	private void deleteRecord() {
+
+	}
+
+
 	/**
 	 * Dump all records in the database. Prints them in a nicely formatted table.
 	 */
 	private void viewRecords() {
 		ChildField children[] = this.key.allChildren();
-		String table[][] = new String[this.key.inUse()+1][children.length+1];
+		String table[][] = new String[this.key.inUse()+1][children.length+2];
 
 		//Get the header
-		table[0][0] = this.key.getName();
+		table[0][0] = "Row: ";
+		table[0][1] = this.key.getName();
 		for (int i = 0; i < children.length; ++i) {
-			table[0][i+1] = children[i].toField().getName();
+			table[0][i+2] = children[i].toField().getName();
 		}
 
 		//Keep going until the end of the list
@@ -247,7 +269,8 @@ public class KeyDialog implements JBaseDialog {
 			int tableRow = 1;
 			while(true) {
 				row = this.key.next(row);
-				table[tableRow][0] = this.key.get(row).toString();
+				table[tableRow][0] = Integer.toString(row);
+				table[tableRow][1] = this.key.get(row).toString();
 				for (int i = 0; i < children.length; ++i) {
 					table[tableRow][i] = children[i].toField().get(row).toString();
 				}
