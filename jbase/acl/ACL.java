@@ -18,8 +18,8 @@ public class ACL implements Serializable {
 	private HashMap<FieldAction, PermissionType> global;					// Global field permissions
 	private HashMap<Field,HashMap<FieldAction,PermissionType>> field;		// Field specific permissions
 
-	private Database db;		// Parent Database
-	private User user;			// Parent user
+	private final Database db;		// Parent Database
+	private final User user;		// Parent user
 
 
 

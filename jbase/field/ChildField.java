@@ -20,5 +20,5 @@ public interface ChildField extends JBaseField {
 	 *  Only used by items and foreign keys
 	 * @return Owner Key field, or null if it doesn't exist
 	 */
-	public abstract ParentField getOwner();
+	public ParentField getOwner();
 }

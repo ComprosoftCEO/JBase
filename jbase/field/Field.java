@@ -92,7 +92,7 @@ public abstract class Field<T extends Serializable> implements Serializable, JBa
 	 * Get the database object associated with this field
 	 * @return Database
 	 */
-	public final Database getDatabase() {
+	public Database getDatabase() {
 		return this.db;
 	}
 

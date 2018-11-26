@@ -33,7 +33,6 @@ public class ForeignKeyField extends ItemField<Integer> implements PointerField 
 	 *  Only used by foreign keys.
 	 * @return Point field, or null if it doesn't exist
 	 */
-	@Override
 	public PointableField getPoint() {
 		return this.point;
 	}

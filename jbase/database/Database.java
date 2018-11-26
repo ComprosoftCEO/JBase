@@ -476,4 +476,11 @@ public class Database implements Serializable {
 	public ACL getACL() {
 		return this.currentUser.getACL();
 	}
+
+
+
+	public ACL getUserACL() {
+
+	}
+
 }
