@@ -32,6 +32,8 @@ CLASSES=\
 	jbase/exception/JBaseException.class \
 	jbase/exception/JBaseIOException.class \
 	jbase/exception/JBaseBadDatabase.class \
+	jbase/exception/JBaseDatabaseNotFound.class \
+	jbase/exception/JBaseInvalidLogin.class \
 	\
 	jbase/exception/JBaseDatabaseException.class \
 	jbase/exception/JBaseDuplicateDatabase.class \

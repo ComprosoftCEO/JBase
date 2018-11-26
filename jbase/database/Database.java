@@ -47,6 +47,7 @@ public class Database implements Serializable {
 	}
 
 
+
 	/**
 	 * Create a new Database object, and add it to the internal list of databases
 	 *
@@ -55,13 +56,16 @@ public class Database implements Serializable {
 	 * @param rootPass Password for the root user of the database
 	 * @return The newly created database
 	 * 
-	 * @throws JBaseException Database already exists
+	 * @throws JBaseDuplicateDatabase Database already exists
 	 */
-	public static Database newDatabase(String dbname, String rootUser, String rootPass) throws JBaseException {
+	public static Database newDatabase(String dbname, String rootUser, String rootPass)
+	 throws JBaseDuplicateDatabase {
 
 		//Make sure the database doesn't already exist
 		if (allDatabases.containsKey(dbname)) {
-			throw new JBaseException("This Database Already Exists!");
+			Database db = allDatabases.get(dbname);
+			db.currentUser = null;
+			throw new JBaseDuplicateDatabase(db);
 		}
 
 		//Create the database
@@ -79,18 +83,21 @@ public class Database implements Serializable {
 	 * @param password Password for the Database user
 	 * @return The newly created database
 	 *
-	 * @throws JBaseException
+	 * @throws JBaseDatabaseNotFound Database does not exist
+	 * @throws JBaseInvalidLogin Unable to log in to the database
 	 */
-	public static Database getDatabase(String dbname, String username, String password) throws JBaseException {
+	public static Database getDatabase(String dbname, String username, String password)
+	 throws JBaseDatabaseNotFound, JBaseInvalidLogin {
 
 		//Find the database (or throw an error if it doesn't exist)
 		Database db = allDatabases.get(dbname);
-		if (db == null) {throw new JBaseException("That Database Does Not Exist!");}
+		if (db == null) {throw new JBaseDatabaseNotFound(dbname);}
+		db.currentUser = null;
 
 		//Try to log in to the database
 		User u = db.users.get(username);
-		if (u == null) {throw new JBaseException("Invalid Username or Password");}
-		if (!u.validatePassword(password)) {throw new JBaseException("Invalid Username or Password");}
+		if (u == null) {throw new JBaseInvalidLogin(db);}
+		if (!u.validatePassword(password)) {throw new JBaseInvalidLogin(db);}
 
 		//We are all good to go!
 		db.currentUser = u;
