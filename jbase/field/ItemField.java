@@ -14,7 +14,7 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 
 	protected final ParentField owner;
 	protected ArrayList<T> values;
-
+	protected int depth;
 
 	/**
 	 * Construct a new item field in the database.
@@ -27,7 +27,8 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	public ItemField(Database db, String name, ParentField owner) {
 		super(db,name,FieldType.ITEM);
 		this.owner = owner;
-		this.values = new ArrayList<T>(owner.getDepth());
+		this.depth = owner.getDepth();
+		this.values = new ArrayList<T>(this.depth);
 		owner.addChild(this);
 	}
 
@@ -47,7 +48,11 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	protected ItemField(FieldType type, Database db, String name, ParentField owner) {
 		super(db,name,type);
 		this.owner = owner;
+
+		this.depth = owner.getDepth();
 		this.values = new ArrayList<T>(owner.getDepth());
+		while(this.values.size() < this.depth) {this.values.add(null);}
+
 		owner.addChild(this);
 	}
 
@@ -57,7 +62,7 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	 * @return Depth
 	 */
 	public int getDepth() {
-		return this.values.size();
+		return this.depth;
 	}
 
 
@@ -78,7 +83,8 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	 */
 	public void resize(ParentField parent) {
 		if (this.owner != parent) {return;}
-		this.values.ensureCapacity(parent.getDepth());
+		this.depth = parent.getDepth();
+		while(this.values.size() < this.depth) {this.values.add(null);}
 	}
 
 
@@ -131,7 +137,7 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.GET);
 		}
 
-		if (row < 0 || row >= values.size()) {
+		if (row < 0 || row >= this.depth) {
 			throw new JBaseBadRow(this,row);
 		}
 
@@ -154,7 +160,7 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.GET);
 		}
 
-		if (row < 0 || row >= values.size()) {
+		if (row < 0 || row >= this.depth) {
 			throw new JBaseBadRow(this,row);
 		}
 

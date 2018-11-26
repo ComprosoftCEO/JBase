@@ -165,7 +165,7 @@ public class KeyDialog implements JBaseDialog {
 		}
 
 		try {
-			this.db.newItem(newItem,this.key);
+			this.db.<String>newItem(newItem,this.key);
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 		}
@@ -198,7 +198,7 @@ public class KeyDialog implements JBaseDialog {
 		}
 
 		try {
-			this.db.newForeignKey(newItem,this.key,(KeyField) this.db.getField(pointerField));
+			this.db.<String>newForeignKey(newItem,this.key,(KeyField) this.db.getField(pointerField));
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 		}
@@ -237,7 +237,73 @@ public class KeyDialog implements JBaseDialog {
 	 */
 	private void newRecord() {
 
+		//First ask for the key (make sure it is unique)
+		String keyv = JBaseDialog.readNotNull(this.key.getName()+": ", true);
+		int row;
+		try {
+			row = ((KeyField<String>) this.key).insert(keyv);
+		} catch (JBaseException ex) {
+			System.out.println(ex.getMessage()+"\n");
+			return;
+		}
+
+		//Now get all items
+		ChildField allKids[] = this.key.allChildren();
+		for (ChildField child: allKids) {
+			Field f = child.toField();
+			if (f.getType() == FieldType.ITEM) {
+				putItem((ItemField) f, row);
+			} else if (f.getType() == FieldType.FOREIGN_KEY) {
+				putForeignKey((ForeignKeyField) f, row);
+			}
+		}
+
 	}
+
+
+
+	/**
+	 * Put a value inside an item field
+	 * @param item The item field to put
+	 * @param row The row to put the new value
+	 */
+	private void putItem(ItemField item, int row) {
+		String value = JBaseDialog.readNotNull(item.getName()+": ",true);
+		try {
+			item.put(row,value);
+		} catch (JBaseException ex) {
+			System.out.println("*** "+ex.getMessage()+" ***");
+		}
+	}
+
+
+	/**
+	 * Put a value inside a foreign key field
+	 * @param fkey The foreign key field to put
+	 * @param row The row to put the new value
+	 */
+	private void putForeignKey(ForeignKeyField fkey, int row) {
+
+		//Print out the records to the screen
+		KeyField key = (KeyField) fkey.getPoint().toField();
+		KeyDialog d = new KeyDialog(this.db,key);
+		d.viewRecords();
+
+		//Get a valid row from the records
+		System.out.println("\nWhich row to point to?");
+		int pRow = JBaseDialog.readInt(fkey.getName()+": ");
+		while(!key.isValidRow(pRow)) {
+			System.out.println("*** Invalid row '"+pRow+"'! ***");
+			pRow = JBaseDialog.readInt(fkey.getName()+": ");
+		}
+
+		try {
+			fkey.put(row,new Integer(pRow));
+		} catch (JBaseException ex) {
+			System.out.println("*** "+ex.getMessage()+" ***");
+		}
+	}
+
 
 
 
@@ -272,7 +338,11 @@ public class KeyDialog implements JBaseDialog {
 				table[tableRow][0] = Integer.toString(row);
 				table[tableRow][1] = this.key.get(row).toString();
 				for (int i = 0; i < children.length; ++i) {
-					table[tableRow][i] = children[i].toField().get(row).toString();
+					String str = "(null)";
+					try {
+						str = String.valueOf(children[i].toField().get(row));
+					} catch (JBaseException ex) {}
+					table[tableRow][i] = str;
 				}
 				tableRow+=1;
 			}
@@ -282,7 +352,7 @@ public class KeyDialog implements JBaseDialog {
 		}
 
 		//Figure out the biggest entry in each column
-		int bigCol[] = new int[children.length+1];
+		int bigCol[] = new int[children.length+2];
 		for (int i = 0; i < table[0].length; ++i) {
 			//Get the biggest entry in each column
 			int max = 0;

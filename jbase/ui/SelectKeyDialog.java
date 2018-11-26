@@ -137,7 +137,7 @@ public class SelectKeyDialog implements JBaseDialog {
 
 		//Try to create the field
 		try {
-			db.newKey(newKey,depth);
+			db.<String>newKey(newKey,depth);
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 			return;

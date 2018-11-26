@@ -55,7 +55,7 @@ public class ForeignKeyField extends ItemField<Integer> implements PointerField 
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.GET);
 		}
 
-		if (row < 0 || row >= values.size()) {
+		if (row < 0 || row >= this.depth) {
 			throw new JBaseBadRow(this,row);
 		}
 
@@ -79,7 +79,7 @@ public class ForeignKeyField extends ItemField<Integer> implements PointerField 
 			throw new JBaseFieldActionDenied(db.currentUser(),this,FieldAction.GET);
 		}
 
-		if (row < 0 || row >= values.size()) {
+		if (row < 0 || row >= this.depth) {
 			throw new JBaseBadRow(this,row);
 		}
 
