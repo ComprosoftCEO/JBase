@@ -249,7 +249,7 @@ public class KeyDialog implements JBaseDialog {
 		d.viewRecords();
 
 		//Get a valid row from the records
-		System.out.println("\nWhich row to point to?");
+		System.out.println("\nSelect a Row (Record)");
 		int pRow = JBaseDialog.readInt(prompt+": ");
 		while(!key.isValidRow(pRow)) {
 			System.out.println("*** Invalid row '"+pRow+"'! ***");
@@ -271,7 +271,7 @@ public class KeyDialog implements JBaseDialog {
 		String keyv = JBaseDialog.readNotNull(this.key.getName()+": ", true);
 		int row;
 		try {
-			row = ((KeyField<String>) this.key).insert(keyv);
+			row = ((KeyField<String>) this.key).<String>insert(keyv);
 		} catch (JBaseException ex) {
 			System.out.println("*** "+ex.getMessage()+" ***\n");
 			return;
@@ -300,7 +300,7 @@ public class KeyDialog implements JBaseDialog {
 	private void putItem(ItemField item, int row) {
 		String value = JBaseDialog.readNotNull(item.getName()+": ",true);
 		try {
-			item.put(row,value);
+			item.<String>put(row,value);
 		} catch (JBaseException ex) {
 			System.out.println("*** "+ex.getMessage()+" ***");
 		}
@@ -330,6 +330,13 @@ public class KeyDialog implements JBaseDialog {
 	 * Delete a record from the database
 	 */
 	private void deleteRecord() {
+		int pRow = getRecord(this.db, (KeyField) this.key, this.key.getName());
+
+		try {
+			this.key.delete(this.key.get(pRow));
+		} catch (JBaseException ex) {
+			System.out.println("*** "+ex.getMessage()+" ***");
+		}
 
 	}
 
@@ -338,8 +345,19 @@ public class KeyDialog implements JBaseDialog {
 	/**
 	 * Edit an existing record in the database
 	 */
-	public void editRecord() {
+	private void editRecord() {
+		int row = getRecord(this.db, (KeyField) this.key, this.key.getName());
 
+		//Edit all of the children
+		ChildField allKids[] = this.key.allChildren();
+		for (ChildField child: allKids) {
+			Field f = child.toField();
+			if (f.getType() == FieldType.ITEM) {
+				putItem((ItemField) f, row);
+			} else if (f.getType() == FieldType.FOREIGN_KEY) {
+				putForeignKey((ForeignKeyField) f, row);
+			}
+		}
 	}
 
 
@@ -387,6 +405,7 @@ public class KeyDialog implements JBaseDialog {
 		//Figure out the biggest entry in each column
 		int bigCol[] = new int[children.length+2];
 		for (int i = 0; i < table[0].length; ++i) {
+
 			//Get the biggest entry in each column
 			int max = 0;
 			for (int j = 0; j < table.length; ++j) {
