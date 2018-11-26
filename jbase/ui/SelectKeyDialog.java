@@ -53,6 +53,21 @@ public class SelectKeyDialog implements JBaseDialog {
 
 
 	/**
+	 * Print out the keys to the terminal
+	 */
+	private void printKeys() {
+		Field[] allFields = this.db.allFields();
+		int i = 1;
+		for (Field f : allFields) {
+			if (f.getType() == FieldType.KEY) {
+				System.out.println(i+": "+f.getName()+" (Depth: "+f.getDepth()+")");
+				++i;
+			}
+		}
+	}
+
+
+	/**
 	 * Show the dialog for this interface
 	 */
 	public void showDialog() {
@@ -67,7 +82,8 @@ public class SelectKeyDialog implements JBaseDialog {
 	private boolean runMenu() {
 		Set<String> allKeys = this.allKeys();
 		System.out.println("\n=== "+this.db.getDBName()+" Fields: ===");
-		JBaseDialog.printCollection(allKeys);
+		System.out.println("Keys:");
+		printKeys();
 
 		System.out.println("\n N - Create a new key field");
 		if (allKeys.size() > 0) {
