@@ -27,8 +27,11 @@ public class ItemField<T extends Serializable> extends Field<T> implements Child
 	public ItemField(Database db, String name, ParentField owner) {
 		super(db,name,FieldType.ITEM);
 		this.owner = owner;
+
 		this.depth = owner.getDepth();
 		this.values = new ArrayList<T>(this.depth);
+		while(this.values.size() < this.depth) {this.values.add(null);}
+
 		owner.addChild(this);
 	}
 

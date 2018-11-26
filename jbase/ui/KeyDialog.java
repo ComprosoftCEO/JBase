@@ -243,7 +243,7 @@ public class KeyDialog implements JBaseDialog {
 		try {
 			row = ((KeyField<String>) this.key).insert(keyv);
 		} catch (JBaseException ex) {
-			System.out.println(ex.getMessage()+"\n");
+			System.out.println("*** "+ex.getMessage()+" ***\n");
 			return;
 		}
 
@@ -334,15 +334,20 @@ public class KeyDialog implements JBaseDialog {
 			int row = -1;
 			int tableRow = 1;
 			while(true) {
+
 				row = this.key.next(row);
+
+				//Get the key value
 				table[tableRow][0] = Integer.toString(row);
 				table[tableRow][1] = this.key.get(row).toString();
+
+				//Get all of the children values
 				for (int i = 0; i < children.length; ++i) {
-					String str = "(null)";
+					String str = "(Null)";
 					try {
 						str = String.valueOf(children[i].toField().get(row));
 					} catch (JBaseException ex) {}
-					table[tableRow][i] = str;
+					table[tableRow][i+2] = str;
 				}
 				tableRow+=1;
 			}

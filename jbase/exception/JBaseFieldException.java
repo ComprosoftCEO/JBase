@@ -19,7 +19,7 @@ public class JBaseFieldException extends JBaseException {
 	 * @param message The message for this exception
 	 */
 	public JBaseFieldException(Field field, String message) {
-		super(field.getName()+":"+message);
+		super(field.getName()+": "+message);
 		this.field = field;
 	}
 
