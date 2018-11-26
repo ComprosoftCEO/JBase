@@ -24,3 +24,6 @@ hs_err_pid*
 
 # Vim .swp files
 *.sw*
+
+# Javadoc documentation
+docs/

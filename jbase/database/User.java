@@ -27,7 +27,7 @@ public class User implements Serializable {
 	/**
 	 * Construct a new User object
 	 *
-	 * @param database The database this user belongs to
+	 * @param db The database this user belongs to
 	 * @param username The username for this User object
 	 * @param password The password for this user
 	 * @param creator The creator of this user (NULL = this is the root user)

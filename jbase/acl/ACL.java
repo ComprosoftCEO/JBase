@@ -105,7 +105,7 @@ public class ACL implements Serializable {
 	 * @param type Allow, Deny, or ignore this action
 	 * @throws JBaseACLEditDenied User doesn't have permission to modify ACL
 	 */
-	public void setPermission(DatabaseAction act, PermissionType type)
+	public void setPermission(DatabaseAction action, PermissionType type)
 	throws JBaseACLEditDenied {
 
 		//Root user cannot edit its own permissions
@@ -118,7 +118,7 @@ public class ACL implements Serializable {
 			throw new JBaseACLEditDenied(db.currentUser());
 		}
 
-		this.database.put(act,type);
+		this.database.put(action,type);
 	}
 
 
@@ -130,7 +130,7 @@ public class ACL implements Serializable {
 	 * @param type Allow, Deny, or ignore this action
 	 * @throws JBaseACLEditDenied User doesn't have permission to modify ACL
 	 */	 
-	public void setPermission(FieldAction act, PermissionType type)
+	public void setPermission(FieldAction action, PermissionType type)
 	throws JBaseACLEditDenied {
 
 		//Root user cannot edit its own permissions
@@ -143,7 +143,7 @@ public class ACL implements Serializable {
 			throw new JBaseACLEditDenied(db.currentUser());
 		}
 
-		this.global.put(act,type);
+		this.global.put(action,type);
 	}
 
 
@@ -156,7 +156,7 @@ public class ACL implements Serializable {
 	 * @param type Allow, deny, or ignore this action
 	 * @throws JBaseACLEditDenied User doesn't have permission to modify ACL
 	 */
-	public void setPermission(Field field, FieldAction act, PermissionType type)
+	public void setPermission(Field field, FieldAction action, PermissionType type)
 	throws JBaseACLEditDenied {
 
 		//Root user cannot edit its own permissions
@@ -176,6 +176,6 @@ public class ACL implements Serializable {
 			this.field.put(field,fmap);
 		}
 	
-		fmap.put(act,type);
+		fmap.put(action,type);
 	}
 }

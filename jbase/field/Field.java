@@ -67,7 +67,8 @@ public abstract class Field<T extends Serializable> implements Serializable, JBa
 	/**
 	 * Get the class for the type of data stored in this field.
 	 *  This uses some fancy reflection found on Stack Overflow.
-	 *  See {@linktourl https://stackoverflow.com/questions/15084670/how-to-get-the-class-of-type-variable-in-java-generics}
+	 *
+	 *  See <a href="https://stackoverflow.com/questions/15084670/how-to-get-the-class-of-type-variable-in-java-generics">Here</a>
 	 *
 	 * @return Class for the data stored in this field
 	 */

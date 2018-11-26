@@ -63,6 +63,8 @@ CLASSES=\
 	jbase/ui/SelectKeyDialog.class \
 	jbase/ui/KeyDialog.class
 
+SOURCES=$(CLASSES:%.class=%.java)
+
 all: $(JAR)
 
 $(JAR): $(CLASSES) $(MANIFEST)
@@ -70,6 +72,11 @@ $(JAR): $(CLASSES) $(MANIFEST)
 
 %.class: %.java
 	javac $<
+
+# Make the JavaDocs
+.PHONY: docs
+docs:
+	javadoc -noqualifier all -d ./docs -sourcepath . -subpackages jbase
 
 # Run the main program
 .PHONY: run
@@ -79,3 +86,4 @@ run: $(JAR)
 .PHONY: clean
 clean:
 	rm -f $(CLASSES) $(JAR)
+	rm -Rf docs

@@ -10,7 +10,7 @@ public class JBaseFieldActionDenied extends JBasePermissionException {
 	 * Construct a new Field Action Denied exception
 	 *
 	 * @param user The user trying to perform this action
-	 * @param db The database this action is being performed on
+	 * @param field The database field this action is being performed on
 	 * @param action The action being executed
 	 */
 	public JBaseFieldActionDenied(String user, Field field, FieldAction action) {
