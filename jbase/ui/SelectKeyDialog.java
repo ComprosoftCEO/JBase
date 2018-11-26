@@ -85,7 +85,9 @@ public class SelectKeyDialog implements JBaseDialog {
 				case "E":
 					if (allKeys.size() > 0) {editKey(); break;}
 				case "D":
-					if (allKeys.size() > 0) {deleteKey(); break;}
+					if (allKeys.size() > 0) {
+						if(deleteKey()) {break;} else {continue;}
+					}
 				default:
 					System.out.println("Unknown command '"+line+"'");
 					continue;
@@ -157,15 +159,16 @@ public class SelectKeyDialog implements JBaseDialog {
 
 	/**
 	 * Delete an existing key
+	 * @return True if to redraw, false otherwise
 	 */
-	private void deleteKey() {
+	private boolean deleteKey() {
 
 		//Get the key field
 		Set<String> allKeys = this.allKeys();
 		String newKey = JBaseDialog.readNotNull("Delete Key: ", true);
-		while (!allKeys.contains(newKey)) {
-			System.out.println("*** Unknown key field '"+newKey+"' ***");
-			newKey = JBaseDialog.readNotNull("Delete Key: ", true);
+		if(!allKeys.contains(newKey)) {
+			System.out.println("*** Unknown key field '"+newKey+"' ***\n");
+			return false;
 		}
 
 		//Try to delete the field
@@ -173,7 +176,9 @@ public class SelectKeyDialog implements JBaseDialog {
 			this.db.getField(newKey).deleteField();
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
-			return;
+			return false;
 		}
+
+		return true;
 	}
 }

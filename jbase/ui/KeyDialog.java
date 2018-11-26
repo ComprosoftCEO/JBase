@@ -118,9 +118,9 @@ public class KeyDialog implements JBaseDialog {
 
 		System.out.println("\n NI - New Item");
 		System.out.println(" NF - New Foreign Key");
-		System.out.println(" DF - Delete field");
+		if (this.allChildren().size() > 0) {System.out.println(" DF - Delete field");}
 		System.out.println(" I  - New record");
-		System.out.println(" D  - Delete record");
+		if (this.key.inUse() > 0) {System.out.println(" D  - Delete record");}
 		System.out.println(" V  - View all records");
 		System.out.println(" Q  - Quit\n");
 
@@ -131,8 +131,11 @@ public class KeyDialog implements JBaseDialog {
 				case "Q": return false;
 				case "NI": newItem(); break;
 				case "NF": newForeignKey(); break;
-				case "DF": deleteField(); break;
 				case "V": viewRecords(); continue;
+				case "DF":
+					if (this.allChildren().size() > 0) {
+						if (deleteField()) {break;} else {continue;}
+					}
 				default: 
 					System.out.println("Unknown command '"+line+"'");
 					continue;
@@ -201,20 +204,16 @@ public class KeyDialog implements JBaseDialog {
 
 	/**
 	 * Delete a child field from this key
+	 * @return True to redraw, false otherwise
 	 */
-	private void deleteField() {
+	private boolean deleteField() {
 
 		//Get the field to delete
 		Set<String> allFields = this.allChildren();
-		if (allFields.size() <= 0) {
-			System.out.println("No fields to delete!\n");
-			return;
-		}
-
 		String toDelete = JBaseDialog.readNotNull("Field to Delete: ", true);
-		while (!allFields.contains(toDelete)) {
-			System.out.println("*** Field '"+toDelete+"' does not exist ***");
-			toDelete = JBaseDialog.readNotNull("Field to Delete: ", true);
+		if (!allFields.contains(toDelete)) {
+			System.out.println("*** Field '"+toDelete+"' does not exist ***\n");
+			return false;
 		}
 
 		try {
@@ -222,7 +221,10 @@ public class KeyDialog implements JBaseDialog {
 
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
+			return false;
 		}
+
+		return true;
 	}
 
 
