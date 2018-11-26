@@ -41,7 +41,7 @@ public class MainDialog implements JBaseDialog {
 				case "Q": return false;
 				case "N": newDatabase(); break;
 				case "L": loadDatabase(); continue;
-				case "O": openDatabase(); break;
+				case "O": if (openDatabase()) {break;} else {continue;}
 				default:
 					System.out.println("Unknown command '"+line+"'");
 					continue;
@@ -87,6 +87,7 @@ public class MainDialog implements JBaseDialog {
 	}
 
 
+
 	/**
 	 * Load the database from an existing file
 	 */
@@ -96,7 +97,7 @@ public class MainDialog implements JBaseDialog {
 		try {
 			Database.loadDatabase(filename);
 		} catch (JBaseException ex) {
-			System.out.println(ex.getMessage()+"\n");
+			System.out.println("*** "+ex.getMessage()+" ***\n");
 			return;
 		}
 
@@ -106,13 +107,14 @@ public class MainDialog implements JBaseDialog {
 
 	/**
 	 * Open an existing database
+	 * @return If true, then redraw the main menu
 	 */
-	private void openDatabase() {
+	private boolean openDatabase() {
 
 		Set<String> allDB = Database.allDatabases();
 		if (allDB.size() <= 0) {
-			System.out.println("No databases to open!\n");
-			return;
+			System.out.println("*** No databases to open! ***\n");
+			return false;
 		}
 
 		//Print out all existing databases
@@ -136,13 +138,14 @@ public class MainDialog implements JBaseDialog {
 		try {
 			db = Database.getDatabase(dbname,username,password);
 		} catch (JBaseException ex) {
-			System.out.println(ex.getMessage()+"\n");
-			return;
+			System.out.println("*** "+ex.getMessage()+" ***\n");
+			return false;
 		}
 
 		//Open the database dialog
 		DatabaseDialog dialog = new DatabaseDialog(db);
 		dialog.showDialog();
+		return true;
 	}
 
 
