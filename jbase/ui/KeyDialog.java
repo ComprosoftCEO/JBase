@@ -126,7 +126,7 @@ public class KeyDialog implements JBaseDialog {
 
 		boolean running = true;
 		while (running) {
-			String line = JBaseDialog.readLine("> ");
+			String line = JBaseDialog.readNotNull("> ",true);
 			switch(line.toUpperCase()) {
 				case "Q": return false;
 				case "NI": newItem(); break;

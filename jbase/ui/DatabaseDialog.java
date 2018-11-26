@@ -42,7 +42,7 @@ public class DatabaseDialog implements JBaseDialog {
 
 		boolean running = true;
 		while(running) {
-			String line = JBaseDialog.readLine("> ");
+			String line = JBaseDialog.readNotNull("> ",true);
 		
 			JBaseDialog d;
 			switch(line.toUpperCase()) {
