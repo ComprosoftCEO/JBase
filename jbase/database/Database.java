@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.HashSet;
 import java.util.UUID;
 import java.io.*;
 
@@ -391,9 +392,9 @@ public class Database implements Serializable {
 	 * Get an array of all users visible to the current user
 	 * @return List of visible users
 	 */
-	public String[] allUsers() {
+	public Set<String> allUsers() {
 
-		ArrayList<String> usrs = new ArrayList<String>();
+		HashSet<String> usrs = new HashSet<String>();
 		if (getACL().canDo(DatabaseAction.VIEW_USERS)) {
 			//I can view all users			
 			for (User u : users.values()) {
@@ -406,7 +407,7 @@ public class Database implements Serializable {
 				if (u.getCreator() == this.currentUser) {usrs.add(u.getUsername());}
 			}
 		}
-		return (String[]) usrs.toArray();
+		return usrs;
 	}
 
 
@@ -479,8 +480,18 @@ public class Database implements Serializable {
 
 
 
-	public ACL getUserACL() {
+	/**
+	 * Get the Access Control List for a Database user
+	 * @param user The user to get the ACL for
+	 * @return Access Control List (ACL)
+	 *
+	 * @throws JBaseUserNotFound Unable to locate user in the database
+	 */
+	public ACL getUserACL(String user) throws JBaseUserNotFound {
+		if (!allUsers().contains(user)) {
+			throw new JBaseUserNotFound(this,user);
+		}
 
+		return this.users.get(user).getACL();
 	}
-
 }

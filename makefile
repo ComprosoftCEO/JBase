@@ -35,10 +35,12 @@ CLASSES=\
 	jbase/exception/JBaseDatabaseNotFound.class \
 	jbase/exception/JBaseInvalidLogin.class \
 	\
+	jbase/exception/JBaseUserException.class \
+	jbase/exception/JBaseUserNotFound.class \
+	jbase/exception/JBaseDuplicateUser.class \
+	\
 	jbase/exception/JBaseDatabaseException.class \
 	jbase/exception/JBaseDuplicateDatabase.class \
-	jbase/exception/JBaseDuplicateUser.class \
-	jbase/exception/JBaseUserNotFound.class \
 	jbase/exception/JBaseFieldNotFound.class \
 	jbase/exception/JBaseDuplicateField.class \
 	jbase/exception/JBaseWrongDatabase.class \

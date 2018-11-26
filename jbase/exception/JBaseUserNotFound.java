@@ -6,9 +6,7 @@ import jbase.database.Database;
  * Exception thrown when a user cannot be found in a database
  * @author Bryan McClain
  */
-public class JBaseUserNotFound extends JBaseDatabaseException {
-
-	private final String user;	//User that wasn't found
+public class JBaseUserNotFound extends JBaseUserException {
 
 	/**
 	 * Construct a User Not Found exception
@@ -17,15 +15,7 @@ public class JBaseUserNotFound extends JBaseDatabaseException {
 	 * @param user User that wasn't found
 	 */
 	public JBaseUserNotFound(Database db, String user) {
-		super(db,"User '"+user+"' not found");
-		this.user = user;
+		super(db,user,"User '"+user+"' not found");
 	}
 
-	/**
-	 * Get the user that wasn't found
-	 * @return User
-	 */
-	public String getUser() {
-		return this.user;
-	}
 }
