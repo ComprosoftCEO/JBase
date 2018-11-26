@@ -4,6 +4,7 @@ import jbase.database.*;
 import jbase.exception.*;
 import jbase.acl.ACL;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.security.MessageDigest;
 
@@ -12,12 +13,11 @@ import java.security.MessageDigest;
  * Represents a single user in a JBase database
  * @author Bryan McClain
  */
-public class User {
+public class User implements Serializable {
 
 	private final String username;			// Username for this User (does not change)
 	private double salt;					// Salt for the password hash
 	private byte[] password;				// Hashed password for this user
-	private final MessageDigest hasher;		// Used for hashing the password
 
 	private final ACL acl;					// Access Control List
 	private final Database db;				// Database the User belongs to
@@ -34,20 +34,10 @@ public class User {
 	 *
 	 * @throws JBaseException Problem setting up the MessageDigest (should not happen)
 	 */
-	public User(Database db, String username, String password, User creator)
-	throws JBaseException {
-
+	public User(Database db, String username, String password, User creator) {
 		this.username = username;
-
-		//Set up the password hasher
-		try {
-			this.hasher = MessageDigest.getInstance("SHA-256");
-			this.salt = Math.random();
-			this.password = hashPassword(password,this.salt,this.hasher);
-		} catch (Exception ex) {
-			throw new JBaseException("Unable to initialize a new User");
-		}
-
+		this.salt = Math.random();
+		this.password = hashPassword(password,this.salt);
 		this.db = db;
 		this.creator = creator;
 		this.acl = new ACL(db,this);
@@ -71,7 +61,14 @@ public class User {
 	 * @param salt The salt for the password
 	 * @return The hash for this password, salt combination
 	 */
-	private static byte[] hashPassword(String password, double salt, MessageDigest hasher) {
+	private static byte[] hashPassword(String password, double salt) {
+		MessageDigest hasher;
+		try {
+			hasher = MessageDigest.getInstance("SHA-256");
+		} catch (Exception ex) {
+			return null;	//Should not happen
+		} 
+
 		String toHash = (salt+password);
 		hasher.update(toHash.getBytes());
 		return hasher.digest();
@@ -85,7 +82,7 @@ public class User {
 	 * @return True if the password is correct, false otherwise
 	 */
 	public boolean validatePassword(String password) {
-		return Arrays.equals(this.password, hashPassword(password, this.salt, this.hasher));
+		return Arrays.equals(this.password, hashPassword(password, this.salt));
 	}
 
 
@@ -102,7 +99,7 @@ public class User {
 
 		//Password is good, so update the password
 		this.salt = Math.random();
-		this.password = hashPassword(newPassword,this.salt,this.hasher);
+		this.password = hashPassword(newPassword,this.salt);
 		return true;
 	}
 

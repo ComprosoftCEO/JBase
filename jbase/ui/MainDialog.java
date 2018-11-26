@@ -39,7 +39,7 @@ public class MainDialog implements JBaseDialog {
 			String line = JBaseDialog.readNotNull("> ",true);
 			switch(line.toUpperCase()) {
 				case "Q": return false;
-				case "N": newDatabase(); continue;
+				case "N": newDatabase(); break;
 				case "L": loadDatabase(); continue;
 				case "O": openDatabase(); break;
 				default:
@@ -80,7 +80,10 @@ public class MainDialog implements JBaseDialog {
 			System.out.println(ex.getMessage()+"\n");
 			return;
 		}
-		System.out.println("");
+	
+		//Open the database dialog
+		DatabaseDialog dialog = new DatabaseDialog(db);
+		dialog.showDialog();
 	}
 
 

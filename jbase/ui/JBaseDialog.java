@@ -75,4 +75,22 @@ public interface JBaseDialog {
 			}
 		}
 	}
+
+
+
+	/**
+	 * Ask the user a Yes-No Question
+	 * @param question The question to ask
+	 * @return True for yes or false for no
+	 */
+	public static boolean readYesNo(String question) {
+		System.out.println(question);
+
+		while(true) {
+			String line = readNotNull("[Y,N]: ", true).toLowerCase();
+			if (line.equals("y")) {return true;}
+			else if (line.equals("n")) {return false;}
+		}
+	}
+
 }

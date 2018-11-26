@@ -109,13 +109,15 @@ public class KeyDialog implements JBaseDialog {
 	 * @return True if to run again, false if not
 	 */
 	private boolean runMenu() {
-		System.out.println("\n=== "+key.getName()+" ===");
 
+		//General info about the key
+		System.out.println("\n=== "+key.getName()+" ===");
 		System.out.println("Depth: "+this.key.getDepth());
 		System.out.println("In Use: "+this.key.inUse());
 		System.out.println("Children: ");
 		printChildren();
 
+		//Print the list of commands
 		System.out.println("\n NI - New Item");
 		System.out.println(" NF - New Foreign Key");
 		if (this.allChildren().size() > 0) {System.out.println(" DF - Delete field");}
@@ -125,9 +127,11 @@ public class KeyDialog implements JBaseDialog {
 		System.out.println(" V  - View all records");
 		System.out.println(" Q  - Quit\n");
 
+		//Read in commands
 		boolean running = true;
 		while (running) {
 			String line = JBaseDialog.readNotNull("> ",true);
+
 			switch(line.toUpperCase()) {
 				case "Q": return false;
 				case "NI": newItem(); break;
