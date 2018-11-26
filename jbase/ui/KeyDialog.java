@@ -120,6 +120,7 @@ public class KeyDialog implements JBaseDialog {
 		System.out.println(" NF - New Foreign Key");
 		if (this.allChildren().size() > 0) {System.out.println(" DF - Delete field");}
 		System.out.println(" I  - New record");
+		if (this.key.inUse() > 0) {System.out.println(" E  - Edit record");}
 		if (this.key.inUse() > 0) {System.out.println(" D  - Delete record");}
 		System.out.println(" V  - View all records");
 		System.out.println(" Q  - Quit\n");
@@ -137,6 +138,8 @@ public class KeyDialog implements JBaseDialog {
 					if (this.allChildren().size() > 0) {
 						if (deleteField()) {break;} else {continue;}
 					}
+				case "E":
+					if (this.key.inUse() > 0) {editRecord(); continue;}
 				case "D":
 					if (this.key.inUse() > 0) {deleteRecord(); continue;}
 				default: 
@@ -233,6 +236,33 @@ public class KeyDialog implements JBaseDialog {
 
 
 	/**
+	 * Select a record from a key field
+	 *
+	 * @param db the database of the field
+	 * @param key The key field to get a record from
+	 * @param prompt Field to display for the prompt
+	 * @return row of the record
+	 */
+	private static int getRecord(Database db, KeyField key, String prompt) {
+		//Print out the records to the screen
+		KeyDialog d = new KeyDialog(db,key);
+		d.viewRecords();
+
+		//Get a valid row from the records
+		System.out.println("\nWhich row to point to?");
+		int pRow = JBaseDialog.readInt(prompt+": ");
+		while(!key.isValidRow(pRow)) {
+			System.out.println("*** Invalid row '"+pRow+"'! ***");
+			pRow = JBaseDialog.readInt(prompt+": ");
+		}
+
+		return pRow;
+	}
+
+
+
+
+	/**
 	 * Create a new record in the database
 	 */
 	private void newRecord() {
@@ -284,18 +314,7 @@ public class KeyDialog implements JBaseDialog {
 	 */
 	private void putForeignKey(ForeignKeyField fkey, int row) {
 
-		//Print out the records to the screen
-		KeyField key = (KeyField) fkey.getPoint().toField();
-		KeyDialog d = new KeyDialog(this.db,key);
-		d.viewRecords();
-
-		//Get a valid row from the records
-		System.out.println("\nWhich row to point to?");
-		int pRow = JBaseDialog.readInt(fkey.getName()+": ");
-		while(!key.isValidRow(pRow)) {
-			System.out.println("*** Invalid row '"+pRow+"'! ***");
-			pRow = JBaseDialog.readInt(fkey.getName()+": ");
-		}
+		int pRow = getRecord(this.db, (KeyField) fkey.getPoint().toField(), fkey.getName());
 
 		try {
 			fkey.put(row,new Integer(pRow));
@@ -311,6 +330,15 @@ public class KeyDialog implements JBaseDialog {
 	 * Delete a record from the database
 	 */
 	private void deleteRecord() {
+
+	}
+
+
+
+	/**
+	 * Edit an existing record in the database
+	 */
+	public void editRecord() {
 
 	}
 
