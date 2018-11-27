@@ -98,6 +98,7 @@ public class Database implements Serializable {
 		//Try to log in to the database
 		User u = db.users.get(username);
 		if (u == null) {throw new JBaseInvalidLogin(db);}
+		if (!u.getACL().canDo(DatabaseAction.LOGIN)) {throw new JBaseInvalidLogin(db);}
 		if (!u.validatePassword(password)) {throw new JBaseInvalidLogin(db);}
 
 		//We are all good to go!
