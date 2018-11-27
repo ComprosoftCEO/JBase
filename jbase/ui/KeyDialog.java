@@ -124,6 +124,7 @@ public class KeyDialog implements JBaseDialog {
 		System.out.println(" I  - New record");
 		if (this.key.inUse() > 0) {System.out.println(" E  - Edit record");}
 		if (this.key.inUse() > 0) {System.out.println(" D  - Delete record");}
+		System.out.println(" R  - Resize Key");
 		System.out.println(" V  - View all records");
 		System.out.println(" Q  - Quit\n");
 
@@ -138,6 +139,7 @@ public class KeyDialog implements JBaseDialog {
 				case "NF": newForeignKey(); break;
 				case "I": newRecord(); continue;
 				case "V": viewRecords(); continue;
+				case "R": resizeKey(); break;
 				case "DF":
 					if (this.allChildren().size() > 0) {
 						if (deleteField()) {break;} else {continue;}
@@ -237,6 +239,24 @@ public class KeyDialog implements JBaseDialog {
 		return true;
 	}
 
+
+
+	/**
+	 * Add more rows to the key field
+	 */
+	private void resizeKey() {
+		int toAdd = JBaseDialog.readInt("Number of Rows to Add: ");
+		while (toAdd <= 0) {
+			System.out.println("*** Invalid number of rows to add: '"+toAdd+"'! ***");
+			toAdd = JBaseDialog.readInt("Number of Rows to Add: ");
+		}
+
+		try {
+			this.key.resize(toAdd);
+		} catch (JBaseException ex) {
+			System.out.println(ex.getMessage()+"\n");
+		}
+	}
 
 
 	/**
