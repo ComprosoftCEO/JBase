@@ -35,7 +35,7 @@ public class DatabaseDialog implements JBaseDialog {
 	private boolean runMenu() {
 
 		//Show the list of commnads
-		System.out.println("\n=== "+this.db.getDBName()+" ===");
+		System.out.println("\n=== "+this.db.getDBName()+" (User: "+this.db.currentUser()+") ===");
 		System.out.println(" F - Fields Menu");
 		System.out.println(" U - Users Menu");
 		System.out.println(" S - Save Database");
@@ -76,7 +76,7 @@ public class DatabaseDialog implements JBaseDialog {
 		try {
 			this.db.saveDatabase(filename);
 		} catch (JBaseException ex) {
-			System.out.println("*** "+ex.getMessage()+" ***\n");
+			System.out.println("*** "+ex.getMessage()+" ***");
 			return;
 		}
 		System.out.println("Database Saved!");
@@ -92,7 +92,7 @@ public class DatabaseDialog implements JBaseDialog {
 		try {
 			this.db.restoreDatabase(filename);
 		} catch (JBaseException ex) {
-			System.out.println("*** "+ex.getMessage()+" ***\n");
+			System.out.println("*** "+ex.getMessage()+" ***");
 			return false;
 		}
 		System.out.println("Database Restored!");
@@ -111,7 +111,7 @@ public class DatabaseDialog implements JBaseDialog {
 			try {
 				this.db.dropDatabase();
 			} catch (JBaseException ex) {
-				System.out.println("*** "+ex.getMessage()+" ***\n");
+				System.out.println("*** "+ex.getMessage()+" ***");
 				return false;
 			}
 		

@@ -118,8 +118,9 @@ public class SelectKeyDialog implements JBaseDialog {
 
 	/**
 	 * Create a new key and open the key dialog
+	 * @return True if to redraw, false otherwise
 	 */
-	private void newKey() {
+	private boolean newKey() {
 		//Get the new key field
 		String newKey = JBaseDialog.readUnique("New Field Name: ", this.allFields(), "*** That field already exists! ***", true);
 
@@ -130,9 +131,10 @@ public class SelectKeyDialog implements JBaseDialog {
 		try {
 			db.<String>newKey(newKey,depth);
 		} catch (JBaseException ex) {
-			System.out.println(ex.getMessage()+"\n");
-			return;
+			System.out.println("*** "+ex.getMessage()+" ***");
+			return false;
 		}
+		return true;
 	}
 
 
@@ -149,7 +151,7 @@ public class SelectKeyDialog implements JBaseDialog {
 		try {
 			key = (KeyField) db.getField(editKey);
 		} catch (JBaseException ex) {
-			System.out.println(ex.getMessage()+"\n");
+			System.out.println("*** "+ex.getMessage()+" ***");
 			return;
 		}
 
@@ -173,7 +175,7 @@ public class SelectKeyDialog implements JBaseDialog {
 		try {
 			this.db.getField(toDelete).deleteField();
 		} catch (JBaseException ex) {
-			System.out.println(ex.getMessage()+"\n");
+			System.out.println("*** "+ex.getMessage()+" ***");
 			return false;
 		}
 
