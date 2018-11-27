@@ -50,12 +50,20 @@ public interface JBaseDialog {
 	/**
 	 * Print out a collection of items to the terminal
 	 * @param c The collection to print
+	 * @param useBullet If true, list fields by bullet point instead of by number
 	 */
-	public static <E> void printCollection(Collection<E> c) {
-		int i = 1;
-		for (E item: c) {
-			System.out.println(i+": "+item.toString());
-			++i;
+	public static <E> void printCollection(Collection<E> c, boolean useBullet) {
+
+		//When to use bullet point vs numbering
+		if (useBullet) {
+			for (E item: c) {
+				System.out.println("* "+item.toString());
+			}
+		} else {
+			int i = 1;
+			for (E item: c) {
+				System.out.println((i++)+": "+item.toString());
+			}
 		}
 	}
 
