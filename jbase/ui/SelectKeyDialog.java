@@ -121,19 +121,10 @@ public class SelectKeyDialog implements JBaseDialog {
 	 */
 	private void newKey() {
 		//Get the new key field
-		Set<String> allFields = this.allFields();
-		String newKey = JBaseDialog.readNotNull("New Field Name: ", true);
-		while (allFields.contains(newKey)) {
-			System.out.println("*** Field '"+newKey+"' already exists ***");
-			newKey = JBaseDialog.readNotNull("New Field Name: ", true);
-		}
+		String newKey = JBaseDialog.readUnique("New Field Name: ", this.allFields(), "*** That field already exists! ***", true);
 
 		//Get the depth for the field
-		int depth = JBaseDialog.readInt("New Field Depth: ");
-		while (depth <= 0) {
-			System.out.println("*** Invalid depth '"+depth+"' ***");
-			depth = JBaseDialog.readInt("New Field Depth: ");
-		}
+		int depth = JBaseDialog.readIntMin("New Field Depth: ","*** Invalid Depth (Must be > 0)! ***",0,true);
 
 		//Try to create the field
 		try {
@@ -151,17 +142,12 @@ public class SelectKeyDialog implements JBaseDialog {
 	private void editKey() {
 
 		//Get the new key field
-		Set<String> allKeys = this.allKeys();
-		String newKey = JBaseDialog.readNotNull("Edit Key: ", true);
-		while (!allKeys.contains(newKey)) {
-			System.out.println("*** Unknown key field '"+newKey+"' ***");
-			newKey = JBaseDialog.readNotNull("Edit Key: ", true);
-		}
+		String editKey = JBaseDialog.readExisting("Edit Key: ",this.allKeys(),"*** Unknown key field! ***", true);
 
 		//Try to open the field
 		KeyField key;
 		try {
-			key = (KeyField) db.getField(newKey);
+			key = (KeyField) db.getField(editKey);
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 			return;
@@ -180,16 +166,12 @@ public class SelectKeyDialog implements JBaseDialog {
 	private boolean deleteKey() {
 
 		//Get the key field
-		Set<String> allKeys = this.allKeys();
-		String newKey = JBaseDialog.readNotNull("Delete Key: ", true);
-		if(!allKeys.contains(newKey)) {
-			System.out.println("*** Unknown key field '"+newKey+"' ***\n");
-			return false;
-		}
+		String toDelete = JBaseDialog.readExisting("Delete Key: ", this.allKeys(), "*** Unknown key field! ***", false);
+		if (toDelete == null) {return false;}
 
 		//Try to delete the field
 		try {
-			this.db.getField(newKey).deleteField();
+			this.db.getField(toDelete).deleteField();
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 			return false;
