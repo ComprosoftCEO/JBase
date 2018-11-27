@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.EnumSet;
 
 /**
  * Interface for interacting with any JBase Dialog
@@ -244,6 +245,31 @@ public interface JBaseDialog {
 			value = JBaseDialog.readInt(prompt);
 		}
 		return value;
+	}
+
+
+	/**
+	 * Ask the user to choose a value from an enum
+	 * 
+	 * @param enumClass The enum to read
+	 * @param prompt String to display before the text
+	 * @param loop If true, keeps looping until user inputs valid input. Otherwise, returns null on failure.
+	 * @return The read enum, or null upon failure
+	 */
+	public static <T extends Enum<T>> T readEnum(Class<T> enumClass, String prompt, boolean loop) {
+
+		Set<T> values = EnumSet.allOf(enumClass);
+
+		//Print the list of values to pick from
+		System.out.println("Pick "+enumClass.getName()+":");
+		printCollection(values,false);
+		System.out.println("");
+		
+		Integer v = readIntRange(prompt,"*** Invalid Option ***",1,values.size(), loop);
+		if (v == null) {return null;}
+
+		//Remember, we number starting at 1 (not 0)
+		return enumClass.getEnumConstants()[v-1];
 	}
 
 
