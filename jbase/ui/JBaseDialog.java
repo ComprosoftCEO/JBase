@@ -252,16 +252,17 @@ public interface JBaseDialog {
 	 * Ask the user to choose a value from an enum
 	 * 
 	 * @param enumClass The enum to read
+	 * @param header Text to display before listing the enum values
 	 * @param prompt String to display before the text
 	 * @param loop If true, keeps looping until user inputs valid input. Otherwise, returns null on failure.
 	 * @return The read enum, or null upon failure
 	 */
-	public static <T extends Enum<T>> T readEnum(Class<T> enumClass, String prompt, boolean loop) {
+	public static <T extends Enum<T>> T readEnum(Class<T> enumClass, String header, String prompt, boolean loop) {
 
 		Set<T> values = EnumSet.allOf(enumClass);
 
 		//Print the list of values to pick from
-		System.out.println("Pick "+enumClass.getName()+":");
+		System.out.println(header);
 		printCollection(values,false);
 		System.out.println("");
 		

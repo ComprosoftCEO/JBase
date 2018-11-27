@@ -93,7 +93,7 @@ public class ACLDialog implements JBaseDialog {
 		System.out.println("\n D - Set database permission");
 		System.out.println(" G - Set global field permission");
 		System.out.println(" F - Edit field specific permission");
-		System.out.println(" Q - Quit");
+		System.out.println(" Q - Quit\n");
 
 		//Run the menu
 		boolean running = true;
@@ -103,9 +103,9 @@ public class ACLDialog implements JBaseDialog {
 
 			switch(line.toUpperCase()) {
 				case "Q": return false;
-				case "D": break;
-				case "G": break;
-				case "F": continue;
+				case "D": databasePermission(); break;
+				case "G": globalPermission(); break;
+				case "F": fieldPermission(); break;
 				default: 
 					System.out.println("Unknown command '"+line+"'");
 					continue;
@@ -115,6 +115,48 @@ public class ACLDialog implements JBaseDialog {
 		}
 
 		return true;
+	}
+
+
+
+	/**
+	 * Update a database permission
+	 */
+	private void databasePermission() {
+
+		//Ask the user which permission
+		DatabaseAction act = JBaseDialog.readEnum(DatabaseAction.class,"\nPick Database Action: ","Action: ", true);
+		PermissionType type = JBaseDialog.readEnum(PermissionType.class,"\nPick Permission Type: ","Type: ",true);
+
+		try {
+			this.acl.setPermission(act,type);
+		} catch (JBaseException ex) {
+			System.out.println("*** "+ex.getMessage()+" ***");
+		}
+	}
+
+	/**
+	 * Update a global field permission
+	 */
+	private void globalPermission() {
+
+		//Ask the user which permission
+		FieldAction act = JBaseDialog.readEnum(FieldAction.class,"\nPick Global Field Action: ","Action: ", true);
+		PermissionType type = JBaseDialog.readEnum(PermissionType.class,"\nPick Permission Type: ","Type: ",true);
+
+		try {
+			this.acl.setPermission(act,type);
+		} catch (JBaseException ex) {
+			System.out.println("*** "+ex.getMessage()+" ***");
+		}
+	}
+
+
+	/**
+	 * Update a field specific permission
+	 */
+	private void fieldPermission() {
+
 	}
 
 }
