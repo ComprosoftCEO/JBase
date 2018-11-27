@@ -61,12 +61,7 @@ public class MainDialog implements JBaseDialog {
 	private void newDatabase() {
 
 		//Get database name
-		Set<String> allDB = Database.allDatabases();
-		String dbname = JBaseDialog.readNotNull("Database Name: ", true);
-		while (allDB.contains(dbname)) {
-			System.out.println("*** Database '"+dbname+"' already exists! ***");
-			dbname = JBaseDialog.readNotNull("Database Name: ", true);
-		}
+		String dbname = JBaseDialog.readUnique("Database Name: ",Database.allDatabases(),"*** That database already exists! ***", true);
 
 		//Get username and password (cannot be empty)
 		String username = JBaseDialog.readNotNull("Root Username: ",true);
@@ -77,7 +72,7 @@ public class MainDialog implements JBaseDialog {
 		try {
 			db = Database.newDatabase(dbname,username,password);
 		} catch (JBaseException ex) {
-			System.out.println(ex.getMessage()+"\n");
+			System.out.println(ex.getMessage()+"");
 			return;
 		}
 	
@@ -97,11 +92,11 @@ public class MainDialog implements JBaseDialog {
 		try {
 			Database.loadDatabase(filename);
 		} catch (JBaseException ex) {
-			System.out.println("*** "+ex.getMessage()+" ***\n");
+			System.out.println("*** "+ex.getMessage()+" ***");
 			return;
 		}
 
-		System.out.println("Database Loaded!\n");
+		System.out.println("Database Loaded!");
 	}
 
 
@@ -113,21 +108,17 @@ public class MainDialog implements JBaseDialog {
 
 		Set<String> allDB = Database.allDatabases();
 		if (allDB.size() <= 0) {
-			System.out.println("*** No databases to open! ***\n");
+			System.out.println("*** No databases to open! ***");
 			return false;
 		}
 
 		//Print out all existing databases
 		System.out.println("Databases:");
-		JBaseDialog.printCollection(allDB);
+		JBaseDialog.printCollection(allDB, true);
 		System.out.println("");
 
 		//Make sure user enters valid database name
-		String dbname = JBaseDialog.readNotNull("Database Name: ", true);
-		while (!allDB.contains(dbname)) {
-			System.out.println("*** Database '"+dbname+"' doesn't exists! ***");
-			dbname = JBaseDialog.readNotNull("Database Name: ", true);
-		}
+		String dbname = JBaseDialog.readExisting("Database Name: ", allDB, "*** That database doesn't exist! ***", true);
 
 		//Get username and password (cannot be empty)
 		String username = JBaseDialog.readNotNull("Username: ",true);
@@ -138,7 +129,7 @@ public class MainDialog implements JBaseDialog {
 		try {
 			db = Database.getDatabase(dbname,username,password);
 		} catch (JBaseException ex) {
-			System.out.println("*** "+ex.getMessage()+" ***\n");
+			System.out.println("*** "+ex.getMessage()+" ***");
 			return false;
 		}
 
