@@ -74,9 +74,9 @@ public class UserDialog implements JBaseDialog {
 			String line = JBaseDialog.readNotNull("> ",true);
 			switch(line.toUpperCase()) {
 				case "Q": return false;
-				case "N": if (this.newUser()) {break;} else {continue;}
-				case "D": if (allUsers.size() > 0) {if (this.deleteUser()) {break;} else {continue;}}
-				case "E": if (allUsers.size() > 0) {this.editUser(); break;}
+				case "N": if (newUser()) {break;} else {continue;}
+				case "D": if (allUsers.size() > 0) {if (deleteUser()) {break;} else {continue;}}
+				case "E": if (allUsers.size() > 0) {if (editUser()) {break;} else {continue;}}
 				default:
 					System.out.println("Unknown command '"+line+"'");
 					continue;
@@ -129,10 +129,17 @@ public class UserDialog implements JBaseDialog {
 
 	/**
 	 * Edit an existing user in the database
+	 * @return True if to redraw, false otherwise
 	 */
-	private void editUser() {
-
-
+	private boolean editUser() {
+		String username = JBaseDialog.readExisting("User to delete: ", this.db.allUsers(), "*** That user doesn't exist! ***", true);
+		try {
+			(new ACLDialog(this.db,username)).showDialog();
+		} catch (JBaseException ex) {
+			System.out.println("*** "+ex.getMessage()+" ***"); /* Should not happen */
+			return false;
+		}
+		return true;
 	}
 
 }
