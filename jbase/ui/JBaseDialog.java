@@ -102,6 +102,8 @@ public interface JBaseDialog {
 	}
 
 
+
+
 	/**
 	 * Ask the user to input a value that is not in the given collection
 	 *
@@ -143,4 +145,71 @@ public interface JBaseDialog {
 		return line;
 	}
 
+
+
+
+	/**
+	 * Ask the user to input an integer at least as small as the minimum value
+	 *
+	 * @param prompt String to display before the text
+	 * @param failure What to print upon failure
+	 * @param min Minimum value (inclusive)
+	 * @param loop If true, keeps looping until user inputs valid input. Otherwise, returns null on failure.
+	 * @return The read integer, or null upon failure
+	 */
+	public static Integer readIntMin(String prompt, String failure, int min, boolean loop) {
+		int value = JBaseDialog.readInt(prompt);
+		while(value < min) {
+			System.out.println(failure);
+			if (!loop) {return null;}
+			value = JBaseDialog.readInt(prompt);
+		}
+		return value;
+	}
+
+
+	/**
+	 * Ask the user to input an integer no larger than the maximum value
+	 *
+	 * @param prompt String to display before the text
+	 * @param failure What to print upon failure
+	 * @param max Maximum value (inclusive)
+	 * @param loop If true, keeps looping until user inputs valid input. Otherwise, returns null on failure.
+	 * @return The read integer, or null upon failure
+	 */
+	public static Integer readIntMax(String prompt, String failure, int max, boolean loop) {
+		int value = JBaseDialog.readInt(prompt);
+		while(value > max) {
+			System.out.println(failure);
+			if (!loop) {return null;}
+			value = JBaseDialog.readInt(prompt);
+		}
+		return value;
+	}
+
+
+
+	/**
+	 * Ask the user to input an integer in the given range 
+	 *
+	 * @param prompt String to display before the text
+	 * @param failure What to print upon failure
+	 * @param one First value (inclusive)
+	 * @param two Second value (inclusive)
+	 * @param loop If true, keeps looping until user inputs valid input. Otherwise, returns null on failure.
+	 * @return The read integer, or null upon failure
+	 */
+	public static Integer readIntRange(String prompt, String failure, int one, int two, boolean loop) {
+
+		int min = Math.min(one,two);
+		int max = Math.max(one,two);
+
+		int value = JBaseDialog.readInt(prompt);
+		while((value < min) || (value > max)) {
+			System.out.println(failure);
+			if (!loop) {return null;}
+			value = JBaseDialog.readInt(prompt);
+		}
+		return value;
+	}
 }
