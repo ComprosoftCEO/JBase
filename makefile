@@ -63,7 +63,8 @@ CLASSES=\
 	jbase/ui/MainDialog.class \
 	jbase/ui/DatabaseDialog.class \
 	jbase/ui/SelectKeyDialog.class \
-	jbase/ui/KeyDialog.class
+	jbase/ui/KeyDialog.class \
+	jbase/ui/UserDialog.class
 
 SOURCES=$(CLASSES:%.class=%.java)
 

@@ -37,7 +37,7 @@ public class DatabaseDialog implements JBaseDialog {
 		//Show the list of commnads
 		System.out.println("\n=== "+this.db.getDBName()+" ===");
 		System.out.println(" F - Fields Menu");
-		//System.out.println(" U - Users Menu");
+		System.out.println(" U - Users Menu");
 		System.out.println(" S - Save Database");
 		System.out.println(" R - Restore Database");
 		System.out.println(" D - Drop Database");
@@ -51,6 +51,7 @@ public class DatabaseDialog implements JBaseDialog {
 			switch(line.toUpperCase()) {
 				case "Q": return false;
 				case "F": (new SelectKeyDialog(this.db)).showDialog(); break;
+				case "U": (new UserDialog(this.db)).showDialog(); break;
 				case "S": saveDatabase(); continue;
 				case "R": if (restoreDatabase()) {return false;} else {continue;}
 				case "D": if (dropDatabase()) {return false;} else {continue;}
