@@ -165,14 +165,8 @@ public class KeyDialog implements JBaseDialog {
 	 * Create a new item field
 	 */
 	private void newItem() {
-		//Get the new item field
-		Set<String> allFields = this.allFields();
-		String newItem = JBaseDialog.readNotNull("New Item Name: ", true);
-		while (allFields.contains(newItem)) {
-			System.out.println("*** Field '"+newItem+"' already exists ***");
-			newItem = JBaseDialog.readNotNull("New Item Name: ", true);
-		}
 
+		String newItem = JBaseDialog.readUnique("New Item Name: ", this.allFields(), "*** That Field Already Exists! ***", true);
 		try {
 			this.db.<String>newItem(newItem,this.key);
 		} catch (JBaseException ex) {
@@ -187,27 +181,19 @@ public class KeyDialog implements JBaseDialog {
 	 */
 	private void newForeignKey() {
 		//Get the new foreign key name
-		Set<String> allFields = this.allFields();
-		String newItem = JBaseDialog.readNotNull("New Foreign Key Name: ", true);
-		while (allFields.contains(newItem)) {
-			System.out.println("*** Field '"+newItem+"' already exists ***");
-			newItem = JBaseDialog.readNotNull("New Foreign Key Name: ", true);
-		}
+
+		String newFKey = JBaseDialog.readUnique("New Foreign Key Name: ", this.allFields(), "*** That Field Already Exists! ***", true);
 
 		//Get what field it points to:
-		Set<String> allKeys = this.allKeys();
-		System.out.println("\nDatabase Keys: ");
-		JBaseDialog.printCollection(allKeys);
+		//  Help the user out by printing a list of keys
+		System.out.println("Pointer Field:");
+		JBaseDialog.printCollection(this.allKeys(), true);
 		System.out.println("");
 
-		String pointerField = JBaseDialog.readNotNull("Pointer Field: ", true);
-		while(!allKeys.contains(pointerField)) {
-			System.out.println("*** Field '"+pointerField+"' does not exist ***");
-			pointerField = JBaseDialog.readNotNull("Pointer Field: ", true);
-		}
+		String pointerField = JBaseDialog.readExisting("Pointer: ", this.allKeys(), "*** That Key Field Doesn't Exist ***", true);
 
 		try {
-			this.db.<String>newForeignKey(newItem,this.key,(KeyField) this.db.getField(pointerField));
+			this.db.<String>newForeignKey(newFKey,this.key,(KeyField) this.db.getField(pointerField));
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 		}
@@ -221,16 +207,11 @@ public class KeyDialog implements JBaseDialog {
 	private boolean deleteField() {
 
 		//Get the field to delete
-		Set<String> allFields = this.allChildren();
-		String toDelete = JBaseDialog.readNotNull("Field to Delete: ", true);
-		if (!allFields.contains(toDelete)) {
-			System.out.println("*** Field '"+toDelete+"' does not exist ***\n");
-			return false;
-		}
+		String toDelete = JBaseDialog.readExisting("Field to Delete: ",this.allChildren(), "*** That field does not exist! ***", false);
+		if (toDelete == null) {return false;}
 
 		try {
 			this.db.getField(toDelete).deleteField();
-
 		} catch (JBaseException ex) {
 			System.out.println(ex.getMessage()+"\n");
 			return false;
@@ -245,12 +226,7 @@ public class KeyDialog implements JBaseDialog {
 	 * Add more rows to the key field
 	 */
 	private void resizeKey() {
-		int toAdd = JBaseDialog.readInt("Number of Rows to Add: ");
-		while (toAdd <= 0) {
-			System.out.println("*** Invalid number of rows to add: '"+toAdd+"'! ***");
-			toAdd = JBaseDialog.readInt("Number of Rows to Add: ");
-		}
-
+		Integer toAdd = JBaseDialog.readIntMin("Number of Rows to Add: ","*** Invalid Number (Must be > 0)! ***", 1, true);
 		try {
 			this.key.resize(toAdd);
 		} catch (JBaseException ex) {
@@ -265,21 +241,24 @@ public class KeyDialog implements JBaseDialog {
 	 * @param db the database of the field
 	 * @param key The key field to get a record from
 	 * @param prompt Field to display for the prompt
+	 * @param loop If true, loop until the user selects a valid record. Otherwise, return an error;
 	 * @return row of the record, or -1 on error
 	 */
-	private static int getRecord(Database db, KeyField key, String prompt) {
+	private static int getRecord(Database db, KeyField key, String prompt, boolean loop) {
 
 		if (key.inUse() <= 0) {return -1;}
 
 		//Print out the records to the screen
+		System.out.println("=== "+key.getName()+" ===");
 		KeyDialog d = new KeyDialog(db,key);
 		d.viewRecords();
 
 		//Get a valid row from the records
-		System.out.println("\nSelect a Row (Record)");
-		int pRow = JBaseDialog.readInt(prompt+": ");
+		System.out.println("");
+		int pRow = JBaseDialog.readInt(prompt+" Row: ");
 		while(!key.isValidRow(pRow)) {
 			System.out.println("*** Invalid row '"+pRow+"'! ***");
+			if (!loop) {return -1;}
 			pRow = JBaseDialog.readInt(prompt+": ");
 		}
 
@@ -341,7 +320,7 @@ public class KeyDialog implements JBaseDialog {
 	 */
 	private void putForeignKey(ForeignKeyField fkey, int row) {
 
-		int pRow = getRecord(this.db, (KeyField) fkey.getPoint().toField(), fkey.getName());
+		int pRow = getRecord(this.db, (KeyField) fkey.getPoint().toField(), fkey.getName(), true);
 
 		try {
 			fkey.put(row,new Integer(pRow));
@@ -357,7 +336,8 @@ public class KeyDialog implements JBaseDialog {
 	 * Delete a record from the database
 	 */
 	private void deleteRecord() {
-		int pRow = getRecord(this.db, (KeyField) this.key, this.key.getName());
+		int pRow = getRecord(this.db, (KeyField) this.key, this.key.getName(), false);
+		if (pRow < 0) {return;}
 
 		try {
 			this.key.delete(this.key.get(pRow));
@@ -373,7 +353,7 @@ public class KeyDialog implements JBaseDialog {
 	 * Edit an existing record in the database
 	 */
 	private void editRecord() {
-		int row = getRecord(this.db, (KeyField) this.key, this.key.getName());
+		int row = getRecord(this.db, (KeyField) this.key, this.key.getName(), true);
 
 		//Edit all of the children
 		ChildField allKids[] = this.key.allChildren();

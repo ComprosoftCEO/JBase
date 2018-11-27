@@ -19,6 +19,32 @@ public interface JBaseDialog {
 
 	//========== Static Helper Methods ===============
 
+
+
+	/**
+	 * Print out a collection of items to the terminal
+	 * @param c The collection to print
+	 * @param useBullet If true, list fields by bullet point instead of by number
+	 */
+	public static <E> void printCollection(Collection<E> c, boolean useBullet) {
+
+		//When to use bullet point vs numbering
+		if (useBullet) {
+			for (E item: c) {
+				System.out.println("* "+item.toString());
+			}
+		} else {
+			int i = 1;
+			for (E item: c) {
+				System.out.println((i++)+": "+item.toString());
+			}
+		}
+	}
+
+
+
+
+
 	/**
 	 * Get a single line of input from the user
 	 * @param prompt String to display before the text
@@ -45,26 +71,6 @@ public interface JBaseDialog {
 			if (trim) {ret = ret.trim();}
 		} while(ret.equals(""));
 		return ret;
-	}
-
-	/**
-	 * Print out a collection of items to the terminal
-	 * @param c The collection to print
-	 * @param useBullet If true, list fields by bullet point instead of by number
-	 */
-	public static <E> void printCollection(Collection<E> c, boolean useBullet) {
-
-		//When to use bullet point vs numbering
-		if (useBullet) {
-			for (E item: c) {
-				System.out.println("* "+item.toString());
-			}
-		} else {
-			int i = 1;
-			for (E item: c) {
-				System.out.println((i++)+": "+item.toString());
-			}
-		}
 	}
 
 
@@ -212,4 +218,6 @@ public interface JBaseDialog {
 		}
 		return value;
 	}
+
+
 }
