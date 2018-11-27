@@ -178,4 +178,37 @@ public class ACL implements Serializable {
 	
 		fmap.put(action,type);
 	}
+
+
+
+	/**
+	 * Get the global database permissions for this ACL
+	 * @return A copy of the global database permissions hashmap
+	 */
+	public HashMap<DatabaseAction,PermissionType> getDatabasePermissions() {
+		return (HashMap) this.database.clone();
+	}
+
+
+	/**
+	 * Get the global field permissions for this ACL
+	 * @return A copy of the field permissions hashmap
+	 */
+	public HashMap<FieldAction,PermissionType> getGlobalPermissions() {
+		return (HashMap) this.global.clone();
+	}
+
+
+	/**
+	 * Get the Field specific permissions for the ACL
+	 * @return A copy of the field specific permissions hashmap
+	 */
+	public HashMap<FieldAction,PermissionType> getFieldPermissions(Field field) {
+		HashMap fieldMap = this.field.get(field);
+		if (fieldMap == null) {
+			return new HashMap<FieldAction,PermissionType>();
+		}
+	
+		return (HashMap) fieldMap.clone();
+	}
 }
