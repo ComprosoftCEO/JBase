@@ -71,7 +71,7 @@ public class UserDialog implements JBaseDialog {
 		//Read in commands and do them
 		boolean running = true;
 		while(running) {
-			String line = JBaseDialog.readNotNull("> ",true);
+			String line = JBaseDialog.readNotNull(this.db.currentUser()+"@"+this.db.getDBName()+":> ",true);
 			switch(line.toUpperCase()) {
 				case "Q": return false;
 				case "N": if (newUser()) {break;} else {continue;}

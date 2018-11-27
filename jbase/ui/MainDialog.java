@@ -36,7 +36,7 @@ public class MainDialog implements JBaseDialog {
 
 		boolean running = true;
 		while(running) {
-			String line = JBaseDialog.readNotNull("> ",true);
+			String line = JBaseDialog.readNotNull("JBase:> ",true);
 			switch(line.toUpperCase()) {
 				case "Q": return false;
 				case "N": newDatabase(); break;

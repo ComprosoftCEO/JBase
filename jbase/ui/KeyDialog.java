@@ -121,7 +121,7 @@ public class KeyDialog implements JBaseDialog {
 		System.out.println("\n NI - New Item");
 		System.out.println(" NF - New Foreign Key");
 		if (this.allChildren().size() > 0) {System.out.println(" DF - Delete field");}
-		System.out.println(" I  - New record");
+		System.out.println(" N  - New record");
 		if (this.key.inUse() > 0) {System.out.println(" E  - Edit record");}
 		if (this.key.inUse() > 0) {System.out.println(" D  - Delete record");}
 		System.out.println(" R  - Resize Key");
@@ -131,13 +131,13 @@ public class KeyDialog implements JBaseDialog {
 		//Read in commands
 		boolean running = true;
 		while (running) {
-			String line = JBaseDialog.readNotNull("> ",true);
+			String line = JBaseDialog.readNotNull(this.db.currentUser()+"@"+this.db.getDBName()+":> ",true);
 
 			switch(line.toUpperCase()) {
 				case "Q": return false;
 				case "NI": newItem(); break;
 				case "NF": newForeignKey(); break;
-				case "I": newRecord(); continue;
+				case "N": newRecord(); continue;
 				case "V": viewRecords(); continue;
 				case "R": resizeKey(); break;
 				case "DF":
