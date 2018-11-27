@@ -93,4 +93,46 @@ public interface JBaseDialog {
 		}
 	}
 
+
+	/**
+	 * Ask the user to input a value that is not in the given collection
+	 *
+	 * @param prompt String to display before the text
+	 * @param values List of values to check for uniqueness
+	 * @param failure What to print upon failure
+	 * @param loop If true, keeps looping until user inputs valid input. Otherwise, returns null on failure.
+	 * @return The string, or null upon failure
+	 */
+	public static String readUnique(String prompt, Collection<String> values, String failure, boolean loop) {
+		String line = JBaseDialog.readNotNull(prompt, true);
+		while (values.contains(line)) {
+			System.out.println(failure);
+			if (!loop) {return null;}
+			line = JBaseDialog.readNotNull(prompt, true);
+		}
+
+		return line;
+	}
+
+
+	/**
+	 * Ask the user to input a value that is in the given collection
+	 *
+	 * @param prompt String to display before the text
+	 * @param values List of values to check for uniqueness
+	 * @param failure What to print upon failure
+	 * @param loop If true, keeps looping until user inputs valid input. Otherwise, returns null on failure.
+	 * @return The string, or null upon failure
+	 */
+	public static String readExisting(String prompt, Collection<String> values, String failure, boolean loop) {
+		String line = JBaseDialog.readNotNull(prompt, true);
+		while (!values.contains(line)) {
+			System.out.println(failure);
+			if (!loop) {return null;}
+			line = JBaseDialog.readNotNull(prompt, true);
+		}
+
+		return line;
+	}
+
 }
