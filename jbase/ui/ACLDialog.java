@@ -6,6 +6,8 @@ import jbase.exception.*;
 import jbase.acl.*;
 
 import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
 
 /**
  * Dialog that allows you to edit the Access Control List of a given user
@@ -39,6 +41,19 @@ public class ACLDialog implements JBaseDialog {
 
 
 
+	/**
+	 * Get the list of all fields in the database
+	 * @return List of all fields
+	 */
+	private Set<String> allFields() {
+		Field[] allFields = this.db.allFields();
+		Set<String> set = new HashSet<String>();
+		for (Field f : allFields) {
+			set.add(f.getName());
+		}
+		return set;
+	}
+
 
 	/**
 	 * Print the complete list of ACL permissions
@@ -70,9 +85,8 @@ public class ACLDialog implements JBaseDialog {
 		for (Field f : allFields) {
 			HashMap field = this.acl.getFieldPermissions(f);
 			if (field.size() > 0) {
-				System.out.println(f.getName()+" Permissions:");
+				System.out.println("\n"+f.getName()+" Permissions:");
 				JBaseDialog.printMap(field,true);
-				System.out.println("");
 			}
 		}
 
@@ -100,12 +114,11 @@ public class ACLDialog implements JBaseDialog {
 		while(running) {
 
 			String line = JBaseDialog.readNotNull("> ",true);
-
 			switch(line.toUpperCase()) {
 				case "Q": return false;
 				case "D": databasePermission(); break;
 				case "G": globalPermission(); break;
-				case "F": fieldPermission(); break;
+				case "F": if(fieldPermission()) {break;} else {continue;}
 				default: 
 					System.out.println("Unknown command '"+line+"'");
 					continue;
@@ -135,6 +148,9 @@ public class ACLDialog implements JBaseDialog {
 		}
 	}
 
+
+
+
 	/**
 	 * Update a global field permission
 	 */
@@ -152,11 +168,85 @@ public class ACLDialog implements JBaseDialog {
 	}
 
 
+
 	/**
 	 * Update a field specific permission
+	 * @return If true, redraw the menu
 	 */
-	private void fieldPermission() {
+	private boolean fieldPermission() {
 
+		Set<String> allFields = this.allFields();
+		if (allFields.size() <= 0) {
+			System.out.println("*** No fields in the database ***");
+			return false;
+		}
+
+		//Print out the list of all fields in the database
+		System.out.println("All Fields: ");
+		JBaseDialog.printCollection(this.allFields(), true);
+		System.out.println("");
+
+		String field = JBaseDialog.readExisting("Field: ", this.allFields(), "*** That field does not exist ***",true);
+		Field f = this.db.getField(field);
+
+		while(editFieldACL(f));
+		return true;
 	}
 
+
+
+	/**
+	 * Edit the ACL permissions for a single field.
+	 *  This functionality is too small to use a full blown class.
+	 *
+	 * @param field The field to edit permissions for
+	 * @return True if to redraw again, false to quit
+	 */
+	private boolean editFieldACL(Field field) {
+
+		//Print out all of the permissions
+		System.out.println("\n=== Edit "+field.getName()+" Permissions ===");
+		HashMap fmap = this.acl.getFieldPermissions(field);
+		if (fmap.size() > 0) {JBaseDialog.printMap(fmap,true);}
+		System.out.println("");
+
+		//Print out the list of commands
+		System.out.println(" E - Edit Field Permission");
+		System.out.println(" Q - Quit\n");
+
+		//Read commands
+		boolean running = true;
+		while(running) {
+			
+			String line = JBaseDialog.readNotNull("> ",true);
+			switch(line.toUpperCase()) {
+				case "Q": return false;
+				case "E": fieldPermission(field); break;
+				default: 
+					System.out.println("Unknown command '"+line+"'");
+					continue;
+			}
+
+			running = false;
+		}
+		return true;
+	}
+
+
+	/**
+	 * Update a field specific permission
+	 * @param field The field to update permissions for
+	 */
+	private void fieldPermission(Field field) {
+
+		//Ask the user which permission
+		FieldAction act = JBaseDialog.readEnum(FieldAction.class,"\nPick Field Action: ","Action: ", true);
+		PermissionType type = JBaseDialog.readEnum(PermissionType.class,"\nPick Permission Type: ","Type: ",true);
+
+		try {
+			this.acl.setPermission(field,act,type);
+		} catch (JBaseException ex) {
+			System.out.println("*** "+ex.getMessage()+" ***");
+		}
+	}
 }
