@@ -132,7 +132,7 @@ public class UserDialog implements JBaseDialog {
 	 * @return True if to redraw, false otherwise
 	 */
 	private boolean editUser() {
-		String username = JBaseDialog.readExisting("User to delete: ", this.db.allUsers(), "*** That user doesn't exist! ***", true);
+		String username = JBaseDialog.readExisting("User to edit: ", this.db.allUsers(), "*** That user doesn't exist! ***", true);
 		try {
 			(new ACLDialog(this.db,username)).showDialog();
 		} catch (JBaseException ex) {

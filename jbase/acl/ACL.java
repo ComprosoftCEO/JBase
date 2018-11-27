@@ -31,6 +31,10 @@ public class ACL implements Serializable {
 	public ACL(Database db, User user) {
 		this.user = user;
 		this.db = db;
+
+		this.database = new HashMap<DatabaseAction,PermissionType>();
+		this.global =  new HashMap<FieldAction, PermissionType>();
+		this.field = new  HashMap<Field,HashMap<FieldAction,PermissionType>>();
 	}
 
 

@@ -2,6 +2,8 @@ package jbase.ui;
 
 import java.util.Scanner;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Interface for interacting with any JBase Dialog
@@ -42,6 +44,31 @@ public interface JBaseDialog {
 	}
 
 
+	/**
+	 * Print all of the values in a map in order
+	 * @param map The map to print
+	 * @param useBullet If true, list fields by bullet point instead of by number
+	 */
+	public static <K,V> void printMap(Map<K,V> map, boolean useBullet) {
+
+		Set<Map.Entry<K,V>> entries = map.entrySet();
+
+		//When to use bullet point vs numbering
+		if (useBullet) {
+			for (Map.Entry<K,V> entry : entries) {
+				K key = entry.getKey();
+				V value = entry.getValue();
+				System.out.println("* "+key.toString()+": "+value.toString());
+			}
+		} else {
+			int i = 1;
+			for (Map.Entry<K,V> entry : entries) {
+				K key = entry.getKey();
+				V value = entry.getValue();
+				System.out.println((i++)+": "+key.toString()+": "+value.toString());
+			}
+		}
+	}
 
 
 
