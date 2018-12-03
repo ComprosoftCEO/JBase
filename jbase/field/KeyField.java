@@ -362,12 +362,14 @@ public final class KeyField<T extends Comparable<T> & Serializable> extends Fiel
 		this.db.deleteField(this,this.uuid);
 
 		//Delete all of my children
-		for (ChildField child : this.children) {
+		HashSet<ChildField> childs = new HashSet<ChildField>(this.children);
+		for (ChildField child : childs) {
 			child.toField().deleteInternal();
 		}
 
 		//Delete all fields that point to me
-		for (PointerField point: this.pointers) {
+		HashSet<PointerField> points = new HashSet<PointerField>(this.pointers);
+		for (PointerField point: points) {
 			point.toField().deleteInternal();
 		}
 	}
